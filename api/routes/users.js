@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/signup', (req, res, next) => {
-  Users.register( new Users({username: req.body.username}), req.body.password,
+  Users.register( new Users({username: req.body.username ,firstname:req.body.firstname,surname:req.body.surname}), req.body.password,
   (err, user) =>{
     if(err){
       res.statusCode = 500;
@@ -23,6 +23,7 @@ router.post('/signup', (req, res, next) => {
       passport.authenticate('local')(req, res, () => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
+        console.log(user)
         res.json({success: true, status: 'Registration Successful!'});
       }); 
     }
@@ -31,7 +32,7 @@ router.post('/signup', (req, res, next) => {
 
 
 router.post('/login', passport.authenticate('local') ,(req, res) => {
-  
+    console.log(req.body)
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
     res.json({success: true, status: 'You are successfully logged in!'});
