@@ -12,9 +12,9 @@ export default function Login (props){
             <StatusBar backgroundColor='#55A8D9'/>
             <View style={styles.contianer}>
                 <Image style={styles.Image} source={require('../images/LogoSmall.png')} />
-                <View style={{width:300}}>
-                    <Input  placeholder='User Name' inputContainerStyle={{borderBottomColor:'white'}} textContentType='username' placeholderTextColor='white'  leftIcon={ <Icon style={{marginRight:20}} type='font-awesome' name='user' size={24} color='white'/>}/>
-                    <Input  placeholder='Password' inputContainerStyle={{borderBottomColor:'white'}} textContentType ='password' placeholderTextColor='white'  secureTextEntry={true} leftIcon={ <Icon style={{marginRight:20}} type='font-awesome' name='unlock-alt' size={24} color='white'/>}/>
+                <View style={{width:'80%'}}>
+                    <Input  placeholder='Email address or phone number' inputContainerStyle={{borderBottomColor:'white'}} textContentType='username' placeholderTextColor='#D6D8DA'  leftIcon={ <Icon style={{marginRight:20}} type='font-awesome' name='user' size={24} color='white'/>}/>
+                    <Input  placeholder='Password' inputContainerStyle={{borderBottomColor:'white'}} textContentType ='password' placeholderTextColor='#D6D8DA'  secureTextEntry={true} leftIcon={ <Icon style={{marginRight:20}} type='font-awesome' name='unlock-alt' size={24} color='white'/>}/>
                     <TouchableOpacity
                         style={{marginLeft:180,marginBottom:10}}
                         onPress={()=>{}}
