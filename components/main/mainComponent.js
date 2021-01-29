@@ -7,7 +7,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 // import { createDrawerNavigator,DrawerItemList } from '@react-navigation/drawer';
 import { Icon } from 'react-native-elements';
-import Login from '../user/loginComponent'
+import Login from '../user/loginComponent';
+import Signup from '../user/signupComponents';
+
 const Stack  = createStackNavigator(); 
 // const Drawer = createDrawerNavigator();
 //loginNavigator
@@ -16,7 +18,7 @@ export default function Main (){
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}} >
                 <Stack.Screen name="Login" component={Login}/>
-                {/* <Stack.Screen name="Dishdetail" component={Dishdetail}  options={{ title: 'Dish detail' }} /> */}
+                <Stack.Screen name="Signup" component={Signup}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

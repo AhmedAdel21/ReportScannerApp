@@ -37,12 +37,14 @@ export default function Login (props){
                     containerStyle={{color:'white'}}
                     titleStyle={{color:'white'}}
                     />
-                    <TouchableOpacity
-                        style={{marginLeft:100,marginBottom:10}}
-                        onPress={()=>{}}
-                    >
-                        <Text>Forget Password ?</Text>
-                    </TouchableOpacity>
+                    <View style={{flexDirection:'row',justifyContent:'center',marginTop:10}}>
+                        <Text>Don't have an accoun?</Text>
+                        <TouchableOpacity
+                            onPress={()=>navigate('Signup')}
+                        >
+                            <Text style={{color:'white',fontSize:15}}>  Sign Up</Text>
+                        </TouchableOpacity>
+                    </View>
                 <View style={{marginTop:20,width:300,height:50}}>
                     <SocialIcon title='Sign In With Facebook'
                     button
