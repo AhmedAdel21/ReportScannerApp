@@ -2,10 +2,10 @@ import {FlatList, View, Text,StatusBar,StyleSheet} from 'react-native';
 import { ListItem, Avatar,Icon} from 'react-native-elements';
 import React  from 'react';
 import { useSelector } from 'react-redux';
-import { color } from 'react-native-reanimated';
+
 import {DrawerActions } from '@react-navigation/native';
-function Menu (props){
-    const { navigate } = props.navigation;
+function Home ({navigation}){
+    
     const user = useSelector(state => state.user)
     const tog = () =>{
         
@@ -36,24 +36,26 @@ function Menu (props){
             <View style={styles.WelcomBar}>
                 <Icon name="menu" size={30} color= 'white' onPress={ () => props.navigation.dispatch(DrawerActions.toggleDrawer()) }/>
                 <Text style={styles.WelcomBarText}>
-                welcome {user.surname}
+                    welcome {user.surname}
                 </Text>
             </View>
             
             <FlatList
-            data={user.data}
-            keyExtractor={item => item.id.toString()}
-            renderItem={renderMenuItem}
+                data={user.data}
+                keyExtractor={item => item.id.toString()}
+                renderItem={renderMenuItem}
             />
+            <Icon name="camera" size={30} color= 'white' onPress={ () => navigation.navigate('Camera') }/>
             <Text>
-            doladasdsad
-            asdas
-            asd
-            asd
-            as
-            const dispatch = useDispatch(d
-            asd)
-        </Text>
+                doladasdsad
+                asdas
+                asd
+                asd
+                as
+                const dispatch = useDispatch(d
+                asd)
+            </Text>
+            
         </View>
         
     );
@@ -88,4 +90,4 @@ const styles = StyleSheet.create({
 
   });
 
-export default Menu;
+export default Home;
