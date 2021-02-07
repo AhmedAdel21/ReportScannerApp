@@ -7,9 +7,9 @@
  */
 import 'react-native-gesture-handler';
 import React from 'react';
-import Main from './components/main/mainComponent';
+import Main from './components/mainComponent';
 import { Provider } from 'react-redux';
-import store from './components/redux/configureStore'; 
+import store from './redux/configureStore'; 
 
 export default function App () {
   return (

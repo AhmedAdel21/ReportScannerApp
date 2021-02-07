@@ -1,10 +1,10 @@
 import {FlatList, View, Text,StatusBar,StyleSheet,TouchableOpacity,Image} from 'react-native';
 import { ListItem, Avatar,Icon} from 'react-native-elements';
 import React,{useState,useRef}  from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {DrawerActions } from '@react-navigation/native';
-
+import {photoUpload,photoDownload} from '../redux/images'
 // import CustomCrop from "react-native-perspective-image-cropper";
 
 
@@ -12,13 +12,14 @@ function Home ({navigation}){
     const [image, setimage] = useState('')
     const user = useSelector(state => state.user)
     const imageCrop = useRef(null)
+    const dispatch = useDispatch()
     const tog = () =>{
         
     }
     const renderMenuItem = ({item,index}) => {
         return(
             <ListItem bottomDivider>
-                <Avatar source={require('../images/LogoSmall.png')} />
+                <Avatar source={require('./images/LogoSmall.png')} />
                 <ListItem.Content>
                     <ListItem.Title>{item.name}</ListItem.Title>
                     <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle>
@@ -42,6 +43,7 @@ function Home ({navigation}){
             imageCrop.crop();
       }
     if (image) {
+        dispatch(photoUpload(image))
         return(
             <View style={{flex:1}}>
                 <Image source={{ uri: image }} style={styles.preview} />
@@ -58,6 +60,9 @@ function Home ({navigation}){
                 <TouchableOpacity onPress={() => crop()}>
                     <Text>CROP IMAGE</Text>
                 </TouchableOpacity> */}
+                <TouchableOpacity onPress={() => setimage('')}>
+                    <Text>retry</Text>
+                </TouchableOpacity>
             </View>
         )
     } else {
@@ -65,7 +70,7 @@ function Home ({navigation}){
             <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
                 <StatusBar backgroundColor='#55A8D9'/>
                 <View style={styles.WelcomBar}>
-                    <Icon name="menu" size={30} color= 'white' onPress={ () => props.navigation.dispatch(DrawerActions.toggleDrawer()) }/>
+                    <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) }/>
                     <Text style={styles.WelcomBarText}>
                         welcome {user.surname}
                     </Text>
@@ -79,12 +84,10 @@ function Home ({navigation}){
                 <Icon name="camera" size={30} color= 'white'
                     onPress={ () => launchCamera(
                                 {
-                                    saveToPhotos: true,
+                                    saveToPhotos: false,
                                     mediaType: 'photo',
-                                    includeBase64: true,
-                                    maxHeight: 200,
-                                    maxWidth: 200,
-                                    quality:0.1,
+                                    includeBase64: false,
+                                    quality:1,
                                     
                                 },
                                 (response) => {

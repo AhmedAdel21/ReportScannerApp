@@ -26,7 +26,7 @@ export default function Login (props){
         <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
             <StatusBar backgroundColor='#55A8D9'/>
             <View style={styles.contianer}>
-                <Image style={styles.Image} source={require('../images/LogoSmall.png')} />
+                <Image style={styles.Image} source={require('./images/LogoSmall.png')} />
                 <View style={{width:'80%'}}>
                     <Input  
                         placeholder='Email address or phone number' inputContainerStyle={{borderBottomColor:'white'}} 

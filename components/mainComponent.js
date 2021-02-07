@@ -7,10 +7,10 @@ import { useSelector,useDispatch } from 'react-redux';
 import {Image, StyleSheet, View, Text} from 'react-native';
 import { Icon } from 'react-native-elements';
 import { createDrawerNavigator,DrawerItemList } from '@react-navigation/drawer';
-import Home from '../home/home';
+import Home from './home';
 // import Camera from '../home/camera';
-import Login from '../user/loginComponent';
-import Signup from '../user/signupComponents';
+import Login from './loginComponent';
+import Signup from './signupComponents';
 
 
 
@@ -38,7 +38,7 @@ export default function Main (){
         <ScrollView>
           <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
             <View style={styles.drawerHeader}>
-            <Image style={styles.Image} source={require('../images/LogoSmall.png')} />
+            <Image style={styles.Image} source={require('./images/LogoSmall.png')} />
               <Text style={{color:'white',fontSize:20,fontWeight:'bold'}}> Welcome {user.surname} </Text>
             </View>
             <DrawerItemList {...props} />
@@ -46,7 +46,7 @@ export default function Main (){
         </ScrollView>
       );
 
-    if (true ) {
+    if (isLoggedIn ) {
         console.log("we are loged in")
         return(
             <NavigationContainer>

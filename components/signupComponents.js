@@ -34,7 +34,7 @@ export default function Signup (props){
             <StatusBar backgroundColor='#55A8D9'/>
             <View style={styles.contianer}>
                 <View style={styles.Image}>
-                    <Image  source={require('../images/LogoSmall.png')} />
+                    <Image  source={require('./images/LogoSmall.png')} />
                 </View>
                 <View style={{flexDirection:'column'}}>
                     <Text style={{color:'white',fontSize:25, fontWeight:'bold'}}>  Sign Up</Text>

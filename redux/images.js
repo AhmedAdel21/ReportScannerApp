@@ -13,21 +13,24 @@ export const photoUpload = createAsyncThunk('redux/photoUpload',async (photo) =>
     var formData = new FormData(); 
     //append created photo{} to formdata
     formData.append('fileData', photoSend);
-    
+    console.log("photo: ",photoSend)
   const response = await fetch (baseUrl + 'image/upload', {
                               method: "POST",
                               headers: { 'Content-Type': 'multipart/form-data' },
                               body: formData,
                             })
+
   const res = await response.json();
+  console.log("res: ",res)
   return res;
 
 })
 
 export const photoDownload = createAsyncThunk('redux/photoDownload',async () => {
-  const response = await fetch (baseUrl + 'dishes')
-  const dishes = await response.json();
-  return dishes;
+  const response = await fetch (baseUrl + 'image/download')
+  const res = await response.json();
+  console.log("res: ",res)
+  return res;
 
 })
 
@@ -39,17 +42,17 @@ export const imageSlice = createSlice({
     },
     extraReducers: {
       [photoUpload.pending]: (state, action) => {
-        console.log('pending dishes')
-        state.status = 'loading'
+        console.log('pending Upload')
+        state.status = 'loading Upload'
       },
       [photoUpload.fulfilled]: (state, action) => {
-        state.status = 'succeeded'
-        console.log('succeeded dishes')
+        state.status = 'succeeded Upload'
+        console.log('succeeded Upload')
         state.dishes = action.payload
       },
       [photoUpload.rejected]: (state, action) => {
         state.status = 'failed'
-        console.log('failed dishes')
+        console.log('failed Upload')
         state.errMess = action.error.message
       },
       [photoDownload.pending]: (state, action) => {
