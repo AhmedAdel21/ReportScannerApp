@@ -5,6 +5,7 @@ import { useSelector,useDispatch } from 'react-redux';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {DrawerActions } from '@react-navigation/native';
 import {photoUpload,photoDownload} from '../redux/images'
+import { baseUrl } from '../shared/baseUrl';
 // import CustomCrop from "react-native-perspective-image-cropper";
 
 
@@ -75,43 +76,39 @@ function Home ({navigation}){
                         welcome {user.surname}
                     </Text>
                 </View>
-                
-                <FlatList
-                    data={user.data}
-                    keyExtractor={item => item.id.toString()}
-                    renderItem={renderMenuItem}
-                />
-                <Icon name="camera" size={30} color= 'white'
-                    onPress={ () => launchCamera(
-                                {
-                                    saveToPhotos: false,
-                                    mediaType: 'photo',
-                                    includeBase64: false,
-                                    quality:1,
-                                    
-                                },
-                                (response) => {
-                                    console.log(response);
-                                    if(response.didCancel){
-                                        console.log("user cancel Camera")
-                                    }
-                                    else if(response.errorCode){
-                                        console.log(response.errorCode)
-                                    }
-                                    else{
-                                        setimage(response.uri)
-                                    }
-                                },
-                        ) }/>
-                <Text>
-                    doladasdsad
-                    asdas
-                    asd
-                    asd
-                    as
-                    const dispatch = useDispatch(d
-                    asd)
-                </Text>
+                <View style={{flex:2}}>
+                    <FlatList
+                        data={user.data}
+                        keyExtractor={item => item.id.toString()}
+                        renderItem={renderMenuItem}
+                    />
+                </View>
+                <View style={styles.cameraIcon}>
+                    <Icon name="camera" size={40} color= 'black'
+                        type='font-awesome'
+                        onPress={ () => launchCamera(
+                                    {
+                                        saveToPhotos: false,
+                                        mediaType: 'photo',
+                                        includeBase64: false,
+                                        quality:1,
+                                        
+                                    },
+                                    (response) => {
+                                        console.log(response);
+                                        if(response.didCancel){
+                                            console.log("user cancel Camera")
+                                        }
+                                        else if(response.errorCode){
+                                            console.log(response.errorCode)
+                                        }
+                                        else{
+                                            setimage(response.uri)
+                                        }
+                                    },
+                            ) }/>
+                </View>
+
                 
             </View>
             
@@ -138,6 +135,12 @@ const styles = StyleSheet.create({
         marginLeft:20,
         fontWeight:'bold',
         
+    },
+    cameraIcon:{             
+                
+        position: 'absolute',                                          
+        bottom: 50,                                                    
+        right: 30,
     },
     preview: {
         flex: 1,

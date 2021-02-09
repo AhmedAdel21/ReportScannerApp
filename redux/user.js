@@ -31,9 +31,96 @@ export const singup = createAsyncThunk('redux/singup',async (newUser) => {
 
 })
 
+const dummyData = [
+  {
+    id:"0",
+    name:"dola",
+    subtitle:"dodldld"
+  },
+  {
+    id:"1",
+    name:"saddola",
+    subtitle:"dodlsacscasdcadld"
+  },
+  {
+    id:"2",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"3",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"4",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"5",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"6",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"7",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"8",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"9",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"10",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"11",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"12",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"13",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"14",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"15",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  },
+  {
+    id:"16",
+    name:"asddola",
+    subtitle:"dxcvodldld"
+  }
+]
 export const userSlice = createSlice({
     name: 'user',
-    initialState: {errMess: null,data:'',firstname:'ahmed',surname:'adel',mobOrEmail:'',logedin:false,status: 'idle'},
+    initialState: {errMess: null,data:dummyData,firstname:'ahmed',surname:'adel',mobOrEmail:'',logedin:false,status: 'idle'},
     reducers: {
         ADD_USER: (state, action) => {
           state.firstname = action.payload
