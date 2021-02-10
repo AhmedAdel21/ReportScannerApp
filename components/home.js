@@ -1,20 +1,23 @@
-import {FlatList, View, Text,StatusBar,StyleSheet,TouchableOpacity,Image} from 'react-native';
+import {FlatList, View, Text,StatusBar,StyleSheet,TouchableOpacity,Image,Modal,Button} from 'react-native';
 import { ListItem, Avatar,Icon} from 'react-native-elements';
 import React,{useState,useRef}  from 'react';
 import { useSelector,useDispatch } from 'react-redux';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {DrawerActions } from '@react-navigation/native';
 import {photoUpload,photoDownload} from '../redux/images'
 import { baseUrl } from '../shared/baseUrl';
 // import CustomCrop from "react-native-perspective-image-cropper";
+import LottieView from "lottie-react-native"
 import { RNCamera } from 'react-native-camera';
 
 function Home ({navigation}){
     const [image, setimage] = useState('')
     const [cameraView, setcameraView ] = useState(false);
+    const [showSpinner, setShowSpinner] = useState(true);
+    const [showModal, setShowModal] = useState(false);
     const user = useSelector(state => state.user)
-    const imageCrop = useRef(null)
-    var cameraRef = useRef(null)
+    const imageCrop = useRef(null);
+    var cameraRef = useRef(null);
+    var spinnerAnimation = useRef(null);
     const dispatch = useDispatch()
     const tog = () =>{
         
@@ -45,21 +48,75 @@ function Home ({navigation}){
     function crop() {
             imageCrop.crop();
       }
+    
+
+    // const spinner = () => {
+    //     return (
+    //         <View style={{position:'absolute',
+    //                 flex: 0,
+    //                 borderRadius: 5,
+    //                 padding: 50,
+    //                 paddingHorizontal: 30,
+    //                 marginTop:250,
+    //                 alignSelf: 'center',
+    //                 alignItems:'center',
+    //                 margin: 20, }}>
+    //             <LottieView
+    //                     source={require('../shared/spinner.json')}
+    //                     loop={false}
+    //                     autoPlay={false}
+    //                     ref={ref => spinnerAnimation = ref} 
+    //                     // style={{alignItems:'center', backgroundColor:"black",position:'absolute' }}
+    //                 />
+    //           </View>
+    //     )
+    // }
+
     const takePicture = async () => {
+        // setShowSpinner(true)
         if (cameraRef) {
-          const options = { quality: 0.5, base64: true };
+            waittingAnimation();
+          const options = { quality: 0.5, base64: false };
           const data = await cameraRef.takePictureAsync(options);
           console.log(data);
+          
+          succeededAnimation();
+        //   hideAnimation();
+        //   setShowSpinner(false)
         }
       };
+
+    const waittingAnimation = () => {
+        if (spinnerAnimation) {
+            spinnerAnimation.current.play(1,250);
+            // spinnerAnimation.current.play(1);
+        }
+        // setShowSpinner(true);
+    }
+    const succeededAnimation = () => {
+        spinnerAnimation.current.play(250,400);
+        // setShowSpinner(false);
+        // spinnerAnimation.current.play(-1);
+    }
+    const faildAnimation = () => {
+        spinnerAnimation.current.play(690,900)
+    }
+    const hideAnimation = ()=> {
+        setShowSpinner(false)
+    }
+    const toggleModal = () =>{
+        setShowModal(!showModal);
+    }
     if (cameraView){
         return (
-            <View style={styles.container}>
+            
+            <View style={styles.container}> 
               <RNCamera
                 ref={ref => cameraRef = ref }
                 style={styles.preview}
                 type={RNCamera.Constants.Type.back}
                 // flashMode={RNCamera.Constants.FlashMode.on}
+                // onPictureTaken={()=> waittingAnimation()}
                 androidCameraPermissionOptions={{
                   title: 'Permission to use camera',
                   message: 'We need your permission to use your camera',
@@ -67,9 +124,43 @@ function Home ({navigation}){
                   buttonNegative: 'Cancel',
                 }}
               />
+                <View 
+                style={{position:'absolute',
+                    flex: 0,
+                    borderRadius: 5,
+                    padding: 50,
+                    paddingHorizontal: 30,
+                    marginTop:250,
+                    alignSelf: 'center',
+                    alignItems:'center',
+                    margin: 20, }}
+                    >
+                    <LottieView
+                        source={require('../shared/spinner.json')}
+                        loop={false}
+                        autoPlay={false}
+                        ref={spinnerAnimation}
+                        onAnimationFinish= { ()=> {}} 
+                        // style={{alignItems:'center', backgroundColor:"black",position:'absolute' }}
+                        />
+            </View>
+            <Modal transparent={true}
+                visible = {showModal}
+                onDismiss = {() => toggleModal() }
+                onRequestClose = {() => toggleModal() }>
+
+                        <Button 
+                            onPress = {() =>{toggleModal();}}
+                            color="#512DA8"
+                            title="Close" 
+                            />
+                    
+                </Modal>
+
+
               <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
                 <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
-                  <Text style={{ fontSize: 14 }}> SNAP </Text>
+                  <Icon name="camera" size={40} color= 'white' type='font-awesome'/>
                 </TouchableOpacity>
               </View>
             </View>
@@ -179,10 +270,10 @@ const styles = StyleSheet.create({
         },
     capture: {
         flex: 0,
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
         borderRadius: 5,
-        padding: 15,
-        paddingHorizontal: 20,
+        padding: 10,
+        paddingHorizontal: 10,
         alignSelf: 'center',
         margin: 20,
         },

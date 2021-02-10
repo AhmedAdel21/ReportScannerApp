@@ -5,6 +5,7 @@ import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 // import org.reactnative.camera.RNCameraPackage;
+import com.airbnb.android.react.lottie.LottiePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.facebook.react.ReactInstanceManager;
@@ -28,7 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new RNCameraPackage());
+          packages.add(new LottiePackage());
           return packages;
         }
 
