@@ -1,95 +1,177 @@
-// import React, { useRef, useState, useEffect } from "react"
-// import { View, StyleSheet, Text, TouchableOpacity, Image, Platform } from "react-native"
-// import Permissions from 'react-native-permissions';
-// // import DocumentScanner from "@woonivers/react-native-document-scanner"
-// import { useSelector,useDispatch } from 'react-redux';
-// import photoUpload from '../redux/images';
-// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-// export default function Camera() {
-//   const pdfScannerElement = useRef(null)
-//   const [data, setData] = useState({})
-//   const [allowed, setAllowed] = useState(true)
-//   const dispatch = useDispatch();
-//   // useEffect(() => {
-//   //   async function requestCamera() {
-//   //     const result = await Permissions.request(Platform.OS === "android" ? "android.permission.CAMERA" : "ios.permission.CAMERA")
-//   //     if (result === "granted") setAllowed(true)
-//   //   }
-//   //   requestCamera()
-//   // }, [])
+import {FlatList, View, Text,StatusBar,StyleSheet,TouchableOpacity,Image,Modal,Button} from 'react-native';
+import { ListItem, Avatar,Icon} from 'react-native-elements';
+import React,{useState,useRef}  from 'react';
+import { useSelector,useDispatch } from 'react-redux';
+import {DrawerActions } from '@react-navigation/native';
+import {photoUpload,photoDownload} from '../redux/images'
+import LottieView from "lottie-react-native"
+import { RNCamera } from 'react-native-camera';
 
-//   function handleOnPressRetry() {
-//     setData({})
-//   }
-//   function photoProcessing({croppedImage, initialImage}){
-//     console.log("croppedImage : ", croppedImage);
-    
-//   }
-//   function handleOnPress() {
-//     pdfScannerElement.current.capture()
-//   }
-//   if (!allowed) {
-//     console.log("You must accept camera permission")
-//     return (<View style={styles.permissions}>
-//       <Text>You must accept camera permission</Text>
-//     </View>)
-//   }
-//   if (data.croppedImage) {
-//     console.log("data", data)
-//     return (
-//       <React.Fragment>
-//         <Image source={{ uri: data.croppedImage }} style={styles.preview} />
-//         <TouchableOpacity onPress={handleOnPressRetry} style={styles.button}>
-//           <Text style={styles.buttonText}>Retry</Text>
-//         </TouchableOpacity>
-//       </React.Fragment>
-//     )
-//   }
-//   return (
-//     <View style={{flex:1}}>
-//       <DocumentScanner
-//       ref={pdfScannerElement}
-//         style={styles.scanner}
-//         onPictureTaken={photoProcessing}
-//         overlayColor="rgba(255,130,0, 0.7)"
-//         enableTorch={false}
-//         quality={0.5}
-//         detectionCountBeforeCapture={5}
-//         detectionRefreshRateInMS={50}
-//       />
-//       <TouchableOpacity onPress={handleOnPress} style={styles.button}>
-//         <Text style={styles.buttonText}>Take picture</Text>
-//       </TouchableOpacity>
-//     </View>
-//   )
-// }
+function Camera ({navigation}){
+    const [image, setimage] = useState('')
+    const [cameraView, setcameraView ] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const user = useSelector(state => state.user)
+    const imageCrop = useRef(null);
+    var cameraRef = useRef(null);
+    var spinnerAnimation = useRef(null);
+    const dispatch = useDispatch()
+    const picTaken = []
+    const takePicture = async () => {
+        if (cameraRef) {
+            waittingAnimation();
+          const options = { quality: 0.5, base64: false };
+          const data = await cameraRef.takePictureAsync(options);
+          console.log(data);
+          picTaken.push({img:data.uri,id:picTaken.length});
+          succeededAnimation();
+          console.log(picTaken);
+          setTimeout(function(){
+            hideAnimation();
+       }, 2000);
+        }
+      };
 
-// const styles = StyleSheet.create({
-//   scanner: {
-//     flex: 1,
-//     aspectRatio: undefined
-//   },
-//   button: {
-//     alignSelf: "center",
-//     position: "absolute",
-//     bottom: 32,
-//   },
-//   buttonText: {
-//     backgroundColor: "rgba(245, 252, 255, 0.7)",
-//     fontSize: 32,
-//   },
-//   preview: {
-//     flex: 1,
-//     width: "100%",
-//     resizeMode: "cover",
-//   },
-//   permissions: {
-//     flex:1,
-//     justifyContent: "center",
-//     alignItems: "center"
-//   }
-// })
+    const waittingAnimation = () => {
+        if (spinnerAnimation) {
+            spinnerAnimation.current.play(1,250);
+        }
+    }
+    const succeededAnimation = () => {
+        spinnerAnimation.current.play(250,400);
+    }
+    const faildAnimation = () => {
+        spinnerAnimation.current.play(690,900)
+    }
+    const hideAnimation = ()=> {
+        spinnerAnimation.current.play(416,417);
+    }
+    const toggleModal = () =>{
+        setShowModal(!showModal);
+    }
+    return (   
+        <View style={styles.container}> 
+            <RNCamera
+            ref={ref => cameraRef = ref }
+            style={styles.preview}
+            type={RNCamera.Constants.Type.back}
+            androidCameraPermissionOptions={{
+                title: 'Permission to use camera',
+                message: 'We need your permission to use your camera',
+                buttonPositive: 'Ok',
+                buttonNegative: 'Cancel',
+            }}
+            />
+            <View 
+            style={{position:'absolute',
+                flex: 0,
+                borderRadius: 5,
+                padding: 50,
+                paddingHorizontal: 30,
+                marginTop:250,
+                alignSelf: 'center',
+                alignItems:'center',
+                margin: 20, }}
+                >
+                <LottieView
+                    source={require('../shared/spinner.json')}
+                    loop={false}
+                    autoPlay={false}
+                    ref={spinnerAnimation}
+                    onAnimationFinish= { ()=> {}} 
+                    />
+        </View>
+        <Modal transparent={true}
+            visible = {showModal}
+            onDismiss = {() => toggleModal() }
+            onRequestClose = {() => toggleModal() }>
+                    <Button 
+                        onPress = {() =>{toggleModal();}}
+                        color="#512DA8"
+                        title="Close" 
+                        />
+                
+            </Modal>
 
 
+            <View style={{ flex: 0, flexDirection: 'row', justifyContent:'center'}}>
+            <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
+                <Icon name="camera" size={40} color= 'white' type='font-awesome'/>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('PicDetial',{picTaken:picTaken})} style={styles.captureDone}>
+                <Icon name="check-circle" size={40} color= 'white' type='font-awesome'/>
+            </TouchableOpacity>
+            </View>
+        </View>
+        );  
+}
 
 
+const styles = StyleSheet.create({
+    Image: {margin:20},
+    WelcomBar: {
+        // alignItems: 'center' ,
+        flexDirection: 'row',
+        backgroundColor:'#55A8D9' ,
+        marginTop:20,
+        marginLeft:10,
+        marginBottom:10
+        },
+    WelcomBarText: {
+        fontSize:20,
+        color:'white',
+        marginLeft:20,
+        fontWeight:'bold',
+        
+    },
+    cameraIcon:{             
+                
+        position: 'absolute',                                          
+        bottom: 50,                                                    
+        right: 30,
+    },
+    preview: {
+        flex: 1,
+        width: "100%",
+        height:'100%',
+        resizeMode: "cover",
+      },
+    Button:{
+        marginTop:10,
+        borderRadius:20,
+        width:120,
+        borderColor:'white',
+        borderEndWidth:1,
+        },
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: 'black',
+        },
+    preview: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        },
+    capture: {
+        flex: 1,
+        borderRadius: 5,
+        padding: 10,
+        paddingHorizontal: 10,
+        justifyContent: 'center',
+        margin: 20,
+        marginLeft:120,
+        },
+        captureDone: {
+            flex: 0,
+            borderRadius: 5,
+            padding: 10,
+            paddingRight:20,
+            paddingHorizontal: 10,
+            justifyContent: 'center',
+            margin: 20,
+            },
+
+  });
+
+export default Camera;

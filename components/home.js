@@ -5,7 +5,6 @@ import { useSelector,useDispatch } from 'react-redux';
 import {DrawerActions } from '@react-navigation/native';
 import {photoUpload,photoDownload} from '../redux/images'
 import { baseUrl } from '../shared/baseUrl';
-// import CustomCrop from "react-native-perspective-image-cropper";
 import LottieView from "lottie-react-native"
 import { RNCamera } from 'react-native-camera';
 
@@ -107,7 +106,7 @@ function Home ({navigation}){
     const toggleModal = () =>{
         setShowModal(!showModal);
     }
-    if (cameraView){
+    if (false){
         return (
             
             <View style={styles.container}> 
@@ -166,24 +165,11 @@ function Home ({navigation}){
             </View>
           );
     }
-    else if (image) {
+    else if (false) {
         dispatch(photoUpload(image))
         return(
             <View style={{flex:1}}>
                 <Image source={{ uri: image }} style={styles.preview} />
-                {/* <CustomCrop
-                updateImage={imageAfterCroping}
-                // rectangleCoordinates={this.state.rectangleCoordinates}
-                initialImage={image}
-                ref={ref => (imageCrop = ref)}
-                overlayColor="rgba(18,190,210, 1)"
-                overlayStrokeColor="rgba(20,190,210, 1)"
-                handlerColor="rgba(20,150,160, 1)"
-                enablePanStrict={false}
-                />
-                <TouchableOpacity onPress={() => crop()}>
-                    <Text>CROP IMAGE</Text>
-                </TouchableOpacity> */}
                 <TouchableOpacity onPress={() => setimage('')}>
                     <Text>retry</Text>
                 </TouchableOpacity>
@@ -209,7 +195,7 @@ function Home ({navigation}){
                 <View style={styles.cameraIcon}>
                     <Icon name="camera" size={40} color= 'black'
                         type='font-awesome'
-                        onPress={ () => setcameraView(true) }/>
+                        onPress={ () => navigation.navigate('Camera') }/>
                 </View>
 
                 

@@ -8,7 +8,8 @@ import {Image, StyleSheet, View, Text} from 'react-native';
 import { Icon } from 'react-native-elements';
 import { createDrawerNavigator,DrawerItemList } from '@react-navigation/drawer';
 import Home from './home';
-// import Camera from '../home/camera';
+import Camera from './camera';
+import PicDetial from './picDetial';
 import Login from './loginComponent';
 import Signup from './signupComponents';
 
@@ -22,7 +23,8 @@ const homeNavigator = ({ navigation }) => {
     return(
         <Stack.Navigator initialRouteName="Menu" screenOptions={{headerShown: false}} >
             <Stack.Screen name="Home" component={Home}  />
-            {/* <Stack.Screen name="Camera" component={Camera}  /> */}
+            <Stack.Screen name="Camera" component={Camera}  />
+            <Stack.Screen name="PicDetial" component={PicDetial}  />
         </Stack.Navigator>
     );
 
