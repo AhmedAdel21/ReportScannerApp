@@ -197,6 +197,11 @@ function Home ({navigation}){
                         type='font-awesome'
                         onPress={ () => navigation.navigate('Camera') }/>
                 </View>
+                <View style={styles.textIcon}>
+                    <Icon name="pencil" size={40} color= 'black'
+                        type='font-awesome'
+                        onPress={ () => navigation.navigate('TextInput') }/>
+                </View>
 
                 
             </View>
@@ -230,6 +235,12 @@ const styles = StyleSheet.create({
         position: 'absolute',                                          
         bottom: 50,                                                    
         right: 30,
+    },
+    textIcon:{             
+                
+        position: 'absolute',                                          
+        bottom: 50,                                                    
+        right: 80,
     },
     preview: {
         flex: 1,

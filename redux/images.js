@@ -3,17 +3,24 @@ import {baseUrl} from '../shared/baseUrl';
 
 import fetch from 'cross-fetch';
 
-export const photoUpload = createAsyncThunk('redux/photoUpload',async (photo) => {
-  var photoSend = {
-    uri: photo,
-    type: 'image/jpeg',
-    name: 'photo.jpg',
-    };
+export const photoUpload = createAsyncThunk('redux/photoUpload',async (photos) => {
+  const photoArray = []
+  for (let photo in photos){
+    var photoSend = {
+      uri: photos[photo].img,
+      type: 'image/jpeg',
+      name: photos[photo].id+'.jpg',
+      };
+      photoArray.push(photoSend)
+  }
+  
     //use formdata
     var formData = new FormData(); 
     //append created photo{} to formdata
-    formData.append('fileData', photoSend);
-    console.log("photo: ",photoSend)
+    for (let photo in photoArray){
+      formData.append('fileData', photoArray[photo]);
+    }
+    console.log("photo: ",photoArray)
   const response = await fetch (baseUrl + 'image/upload', {
                               method: "POST",
                               headers: { 'Content-Type': 'multipart/form-data' },
@@ -54,6 +61,7 @@ export const imageSlice = createSlice({
         state.status = 'failed'
         console.log('failed Upload')
         state.errMess = action.error.message
+        console.log(action.error.message)
       },
       [photoDownload.pending]: (state, action) => {
         console.log('pending dishes')

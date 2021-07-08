@@ -12,8 +12,8 @@ import Camera from './camera';
 import PicDetial from './picDetial';
 import Login from './loginComponent';
 import Signup from './signupComponents';
-
-
+import ReportTextInput from './reportInputComponent';
+import ReportTextOutput from './ocrOutputComponent';
 
 const Stack  = createStackNavigator(); 
 const Drawer = createDrawerNavigator();
@@ -25,6 +25,8 @@ const homeNavigator = ({ navigation }) => {
             <Stack.Screen name="Home" component={Home}  />
             <Stack.Screen name="Camera" component={Camera}  />
             <Stack.Screen name="PicDetial" component={PicDetial}  />
+            <Stack.Screen name="ReportTextInput" component={ReportTextInput}  />
+            <Stack.Screen name="ReportTextOutput" component={ReportTextOutput}  />
         </Stack.Navigator>
     );
 
@@ -48,7 +50,7 @@ export default function Main (){
         </ScrollView>
       );
 
-    if (isLoggedIn ) {
+    if (true ) {
         console.log("we are loged in")
         return(
             <NavigationContainer>
