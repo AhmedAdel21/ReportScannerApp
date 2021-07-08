@@ -200,7 +200,7 @@ function Home ({navigation}){
                 <View style={styles.textIcon}>
                     <Icon name="pencil" size={40} color= 'black'
                         type='font-awesome'
-                        onPress={ () => navigation.navigate('TextInput') }/>
+                        onPress={ () => navigation.navigate('ReportTextInput') }/>
                 </View>
 
                 

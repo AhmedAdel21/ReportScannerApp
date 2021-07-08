@@ -31,6 +31,36 @@ function ReportTextOutput ({navigation}){
       ['PCT', 0, '%'],
       ['PDW', 0, '%'],
     ]
+    var dataInserted = [
+        ['RBC', ''],
+        ['HGB', ''],
+        ['HCT', ''],
+        ['MCV', ''],
+        ['MCH', ''],
+        ['MCHC',''],
+        ['RDW', ''],
+        ['WBC', ''],
+        ['LYM', ''],
+        ['LYM', ''],
+        ['MON', ''],
+        ['MON', ''],
+        ['GRA', ''],
+        ['GRA', ''],
+        ['PLT', ''],
+        ['MPV', ''],
+        ['PCT', ''],
+        ['PDW', ''],
+    ]
+    const element = (index) => (
+        <TextInput
+        style={{alignSelf:'center'}}
+        onChangeText={(value) => setItemValue(value,index)}
+        placeholder="***"
+      />
+      );
+    const setItemValue = (value,index) => {
+        dataInserted[index][1] = value;
+    }
 
         return(
             <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
@@ -43,30 +73,33 @@ function ReportTextOutput ({navigation}){
                 </View>
 
                 <View style={styles.container}>
-                    <Table borderStyle={{borderColor: 'transparent'}}>
+                    <Table borderStyle={{borderWidth: 2, borderColor: '#ffff'}}>
                     <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
-                    <ScrollView>
+                    </Table>
+                    <ScrollView style={{backgroundColor:'#fff'}}>
+                    <Table borderStyle={{borderWidth: 1, borderColor: '#ffff'}}>
                         {
                             tableData.map((rowData, index) => (
-                            <TableWrapper key={index} style={styles.row}>
+                            <TableWrapper key={index} style={index%2? styles.row2 : styles.row1}>
                                 {
                                 rowData.map((cellData, cellIndex) => (
-                                    <Cell key={cellIndex} data={cellData} textStyle={styles.text}/>
+                                    <Cell  key={cellIndex} data={cellIndex === 1 ? element(index) : cellData} textStyle={styles.text}/>
                                 ))
                                 }
                             </TableWrapper>
                             ))
                         }
+                    </Table>
                         <View style={styles.buttomContainerStyle}>
                             <Button 
                                 icon={
                                     <Icon
                                     type='font-awesome' name="times"
                                     size={30}
-                                    color="black"
+                                    color="white"
                                     />
                                 }
-                                title="   Cancel"
+                                title=""
                                 buttonStyle={styles.ButtoncancelStyle}
                                 loading= {false}
                                 type="outline"
@@ -78,12 +111,12 @@ function ReportTextOutput ({navigation}){
                                 <Button 
                                 icon={
                                     <Icon
-                                    type='font-awesome' name="upload"
+                                    type='font-awesome' name="check"
                                     size={30}
                                     color="white"
                                     />
                                 }
-                                title="   Confirm"
+                                title=""
                                 buttonStyle={styles.ButtonUploadStyle}
                                 loading= {false}
                                 type="outline"
@@ -94,7 +127,6 @@ function ReportTextOutput ({navigation}){
                                 />
                         </View>
                     </ScrollView>
-                    </Table>
                 </View>
                 
             </View>
@@ -125,28 +157,31 @@ const styles = StyleSheet.create({
     container: { flex: 1, padding:0, paddingTop: 0, backgroundColor: '#8BC0E0' },
     head: { height: 40, backgroundColor: '#FFFFFF' },
     text: { margin: 6 },
-    row: { flexDirection: 'row', backgroundColor: '#8BC0E0' },
+    row1: { flexDirection: 'row', backgroundColor: '#8BC0E0' },
+    row2: { flexDirection: 'row', backgroundColor: '#A3CBE3' },
     buttomContainerStyle: {
         flex:1,
+        backgroundColor:'#fff',
         flexDirection: 'row',
         alignSelf:'center',
-        backgroundColor: '#8BC0E0',
-        paddingBottom:50,
+        paddingBottom:20,
       },
     ButtonUploadStyle:{
         backgroundColor: '#38C829',
         margin:10,
-        borderRadius:20,
-        width:120,
+        marginLeft:20,
+        borderRadius:50,
+        width:50,
         borderColor:'black',
         borderEndWidth:1,
         },
     ButtoncancelStyle:{
             backgroundColor: '#EE3413',
             margin:10,
+            marginRight:50,
             borderRadius:20,
-            width:120,
-            borderColor:'black',
+            width:50,
+            borderColor:'white',
             borderEndWidth:1,
         },
   });
