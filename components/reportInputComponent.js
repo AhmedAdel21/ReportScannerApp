@@ -56,6 +56,7 @@ function ReportTextInput ({navigation}){
         style={{alignSelf:'center'}}
         onChangeText={(value) => setItemValue(value,index)}
         placeholder="***"
+        keyboardType="numeric"
       />
       );
     const setItemValue = (value,index) => {
@@ -104,7 +105,7 @@ function ReportTextInput ({navigation}){
                                 type="outline"
                                 containerStyle={{color:'black'}}
                                 titleStyle={{color:'black'}}
-                                onPress={   ()=>  navigation.navigate('Home')   }
+                                onPress={   ()=>  navigation.navigate('PatientHome')   }
 
                                 />
                                 <Button 

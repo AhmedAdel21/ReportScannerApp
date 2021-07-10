@@ -23,7 +23,7 @@ export default function Login (props){
     }
 
     return(
-        <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
+        <ScrollView style={{ backgroundColor:'#55A8D9'}}>
             <StatusBar backgroundColor='#55A8D9'/>
             <View style={styles.contianer}>
                 <Image style={styles.Image} source={require('./images/LogoSmall.png')} />
@@ -66,15 +66,15 @@ export default function Login (props){
                     onPress={()=>{signingin(mobOrEmail,password);}}
 
                     />
-                    <View style={{flexDirection:'row',justifyContent:'center',marginTop:10}}>
+                <View style={{flexDirection:'row',justifyContent:'center',marginTop:10}}>
                         <Text>Don't have an accoun?</Text>
                         <TouchableOpacity
                             onPress={()=>navigate('Signup')}
                         >
                             <Text style={{color:'white',fontSize:15}}>  Sign Up</Text>
                         </TouchableOpacity>
-                    </View>
-                <View style={{marginTop:20,width:300,height:50}}>
+                </View>
+                <View style={{marginTop:20,width:300,height:50,marginBottom:90}}>
                     <SocialIcon title='Sign In With Facebook'
                     button
                     type='facebook'
@@ -88,7 +88,7 @@ export default function Login (props){
                     />
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 
 }

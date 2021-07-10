@@ -7,22 +7,24 @@ import { useSelector,useDispatch } from 'react-redux';
 import {Image, StyleSheet, View, Text} from 'react-native';
 import { Icon } from 'react-native-elements';
 import { createDrawerNavigator,DrawerItemList } from '@react-navigation/drawer';
-import Home from './home';
-import Camera from './camera';
+import PatientHome from './patienttHomeComponent';
+import Camera from './cameraComponent';
 import PicDetial from './picDetial';
 import Login from './loginComponent';
 import Signup from './signupComponents';
 import ReportTextInput from './reportInputComponent';
 import ReportTextOutput from './ocrOutputComponent';
-
+import DoctorHome from './doctorHomeComponent';
+import SignupPatient from './signupPatientComponents';
+import SignupDoctor from './signupDoctorComponents';
 const Stack  = createStackNavigator(); 
 const Drawer = createDrawerNavigator();
 
 
-const homeNavigator = ({ navigation }) => {
+const PatientHomeNavigator = ({ navigation }) => {
     return(
-        <Stack.Navigator initialRouteName="Menu" screenOptions={{headerShown: false}} >
-            <Stack.Screen name="Home" component={Home}  />
+        <Stack.Navigator initialRouteName="PatientHome" screenOptions={{headerShown: false}} >
+            <Stack.Screen name="PatientHome" component={PatientHome}  />
             <Stack.Screen name="Camera" component={Camera}  />
             <Stack.Screen name="PicDetial" component={PicDetial}  />
             <Stack.Screen name="ReportTextInput" component={ReportTextInput}  />
@@ -31,7 +33,14 @@ const homeNavigator = ({ navigation }) => {
     );
 
 }
+const DoctortHomeNavigator = ({ navigation }) => {
+    return(
+        <Stack.Navigator initialRouteName="DoctorHome" screenOptions={{headerShown: false}} >
+            <Stack.Screen name="DoctorHome" component={DoctorHome}  />
+        </Stack.Navigator>
+    );
 
+}
 
 
 export default function Main (){
@@ -50,22 +59,34 @@ export default function Main (){
         </ScrollView>
       );
 
-    if (true ) {
-        console.log("we are loged in")
+    if (false ) {
+        console.log("we are loged in as a patient")
         return(
             <NavigationContainer>
-                <Drawer.Navigator initialRouteName="Home" drawerStyle={{backgroundColor: '#55A8D9'}} drawerContent={(props) => CustomDrawerContentComponent (props)} >
-                    <Drawer.Screen name='Home' component={homeNavigator}  options={{drawerIcon:({ tintColor }) => (<Icon name='list' type='font-awesome' size={24} color={tintColor}/>) ,title: "Menu"}}/>
+                <Drawer.Navigator initialRouteName="PatientHome" drawerStyle={{backgroundColor: '#55A8D9'}} drawerContent={(props) => CustomDrawerContentComponent (props)} >
+                    <Drawer.Screen name='PatientHome' component={PatientHomeNavigator}  options={{drawerIcon:({ tintColor }) => (<Icon name='list' type='font-awesome' size={24} color={tintColor}/>) ,title: "Menu"}}/>
                 </Drawer.Navigator>
             </NavigationContainer>
         );
-    } else {
+    }else if (false) {
+        console.log("we are loged in as a doctor")
+        return(
+            <NavigationContainer>
+                <Drawer.Navigator initialRouteName="DoctorHome" drawerStyle={{backgroundColor: '#55A8D9'}} drawerContent={(props) => CustomDrawerContentComponent (props)} >
+                    <Drawer.Screen name='DoctorHome' component={DoctortHomeNavigator}  options={{drawerIcon:({ tintColor }) => (<Icon name='list' type='font-awesome' size={24} color={tintColor}/>) ,title: "Menu"}}/>
+                </Drawer.Navigator>
+            </NavigationContainer>
+        );
+    }
+     else {
         console.log("we are not loged in")
         return(
             <NavigationContainer>
                 <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}} >
                     <Stack.Screen name="Login" component={Login}/>
                     <Stack.Screen name="Signup" component={Signup}/>
+                    <Stack.Screen name="SignupPatient" component={SignupPatient}/>
+                    <Stack.Screen name="SignupDoctor" component={SignupDoctor}/>
                 </Stack.Navigator>
             </NavigationContainer>
         );

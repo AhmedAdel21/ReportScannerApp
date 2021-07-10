@@ -98,7 +98,7 @@ function PicDetial (props){
                 type="outline"
                 containerStyle={{color:'black'}}
                 titleStyle={{color:'black'}}
-                onPress={   ()=>  navigate('Home')   }
+                onPress={   ()=>  navigate('PatientHome')   }
 
                 />
                 <Button 
