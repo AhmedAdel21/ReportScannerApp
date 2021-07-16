@@ -15,8 +15,6 @@ import Signup from './signupComponents';
 import ReportTextInput from './reportInputComponent';
 import ReportTextOutput from './ocrOutputComponent';
 import DoctorHome from './doctorHomeComponent';
-import SignupPatient from './signupPatientComponents';
-import SignupDoctor from './signupDoctorComponents';
 const Stack  = createStackNavigator(); 
 const Drawer = createDrawerNavigator();
 
@@ -45,6 +43,7 @@ const DoctortHomeNavigator = ({ navigation }) => {
 
 export default function Main (){
     const isLoggedIn  = useSelector(state => state.user.logedin)
+    const userType  = useSelector(state => state.user.type)
     const user = useSelector(state => state.user)
 
     const CustomDrawerContentComponent = (props) => (
@@ -59,16 +58,18 @@ export default function Main (){
         </ScrollView>
       );
 
-    if (false ) {
-        console.log("we are loged in as a patient")
-        return(
-            <NavigationContainer>
-                <Drawer.Navigator initialRouteName="PatientHome" drawerStyle={{backgroundColor: '#55A8D9'}} drawerContent={(props) => CustomDrawerContentComponent (props)} >
-                    <Drawer.Screen name='PatientHome' component={PatientHomeNavigator}  options={{drawerIcon:({ tintColor }) => (<Icon name='list' type='font-awesome' size={24} color={tintColor}/>) ,title: "Menu"}}/>
-                </Drawer.Navigator>
-            </NavigationContainer>
-        );
-    }else if (false) {
+    if (isLoggedIn ) {
+        if(userType == 'patient' ){
+            console.log("we are loged in as a patient")
+            return(
+                <NavigationContainer>
+                    <Drawer.Navigator initialRouteName="PatientHome" drawerStyle={{backgroundColor: '#55A8D9'}} drawerContent={(props) => CustomDrawerContentComponent (props)} >
+                        <Drawer.Screen name='PatientHome' component={PatientHomeNavigator}  options={{drawerIcon:({ tintColor }) => (<Icon name='list' type='font-awesome' size={24} color={tintColor}/>) ,title: "Menu"}}/>
+                    </Drawer.Navigator>
+                </NavigationContainer>
+            );
+
+    }else if (userType == 'doctor' ) {
         console.log("we are loged in as a doctor")
         return(
             <NavigationContainer>
@@ -78,15 +79,13 @@ export default function Main (){
             </NavigationContainer>
         );
     }
-     else {
+    }else {
         console.log("we are not loged in")
         return(
             <NavigationContainer>
                 <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}} >
                     <Stack.Screen name="Login" component={Login}/>
                     <Stack.Screen name="Signup" component={Signup}/>
-                    <Stack.Screen name="SignupPatient" component={SignupPatient}/>
-                    <Stack.Screen name="SignupDoctor" component={SignupDoctor}/>
                 </Stack.Navigator>
             </NavigationContainer>
         );

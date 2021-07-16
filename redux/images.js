@@ -43,9 +43,9 @@ export const photoDownload = createAsyncThunk('redux/photoDownload',async () => 
 
 export const imageSlice = createSlice({
     name: 'image',
-    initialState: {errMess: null,user:'',images:[],status: 'idle'},
+    initialState: {errMess: null,report:'',images:[],status: 'idle'},
     reducers: {
-        ADD_DISHES: (state, action) => {state.dishes = action.payload}
+        ADD_IMAGE: (state, action) => {state.dishes = action.payload}
     },
     extraReducers: {
       [photoUpload.pending]: (state, action) => {
@@ -55,7 +55,7 @@ export const imageSlice = createSlice({
       [photoUpload.fulfilled]: (state, action) => {
         state.status = 'succeeded Upload'
         console.log('succeeded Upload')
-        state.dishes = action.payload
+        state.report = action.payload
       },
       [photoUpload.rejected]: (state, action) => {
         state.status = 'failed'
@@ -80,6 +80,6 @@ export const imageSlice = createSlice({
     }
 })
 
-export const { ADD_DISHES, DISHES_FAILED, DISHES_LOADING} = imageSlice.actions;
+export const { ADD_IMAGE} = imageSlice.actions;
 export default imageSlice.reducer;
 

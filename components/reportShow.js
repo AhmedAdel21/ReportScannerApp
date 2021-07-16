@@ -4,43 +4,21 @@ import React,{useState}  from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import {DrawerActions } from '@react-navigation/native';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
+import { Loading } from './watingComponent';
 import {postReports} from '../redux/reports';
+function ReportShow (props){
 
-var dataInserted = [
-    ['RBC', ''],
-    ['HGB', ''],
-    ['HCT', ''],
-    ['MCV', ''],
-    ['MCH', ''],
-    ['MCHC',''],
-    ['RDW', ''],
-    ['WBC', ''],
-    ['LYM', ''],
-    ['LYMP', ''],
-    ['MON', ''],
-    ['MONP', ''],
-    ['GRA', ''],
-    ['GRAP', ''],
-    ['PLT', ''],
-    ['MPV', ''],
-    ['PCT', ''],
-    ['PDW', ''],
-    ['comments','']
-]
-
-function ReportTextInput ({navigation}){
-   
-    const user = useSelector(state => state.user)
+    const report = useSelector(state => state.user.reports)
     var patientId = user.id;
-    const dola = []
-    const dispatch = useDispatch()
+    const image = useSelector(state => state.image)
+    console.log("id : ",patientId);
     var tableHead = ['Measurement', 'Value','Units'];
     var tableData = [
       ['RBC', 0, '10^6/ul'],
       ['HGB', 0, 'g/dl'],
-      ['HCT', 0, '%'],
+      ['НСТ', 0, '%'],
       ['MCV', 0, 'Um^3'],
-      ['MCH', 0, 'pg'],
+      ['МСH', 0, 'pg'],
       ['MCHC', 0, 'g/dl'],
       ['RDW', 0, '%'],
       ['WBC', 0, '10^3/ul'],
@@ -53,77 +31,55 @@ function ReportTextInput ({navigation}){
       ['PLT', 0, '10^3/ul'],
       ['MPV', 0, 'Um^3'],
       ['PCT', 0, '%'],
-      ['PDW', 0, '%'],
+      ['PDW', 0, '%']
     ]
     
-    const element = (index) => (
+    const element = (Measurement,index) => (
         <TextInput
         style={{alignSelf:'center'}}
         onChangeText={(value) => setItemValue(value,index)}
-        placeholder="***"
+        placeholder={image.report.measurments[Measurement.toString()]}
         keyboardType="numeric"
       />
-      );
-    const setItemValue = (value,index) => {
-        dataInserted[index][1] = value;
-    }
-    function arrayToJSONObject (arr){
-        var jsonData = [];
-        for(var i=0; i<arr.length; i++) {
-            var Element = arr[i];
-            o = {};
-            o[Element[0]] = Element[1]
-            jsonData.push(o);
-        }
-        return jsonData;
-    }
-    const uploadData =() =>{
-        var sendingData = {};
-        dataInserted.forEach((item) => {
-            sendingData[item[0]]=item[1];
-        })
-        sendingData["patientId"] = patientId;
-        sendingData["date"] = new Date().toISOString();
-        console.log('data',sendingData);
-        dispatch(postReports(sendingData));
-    }
+      )
+
         return(
             <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
                 <StatusBar backgroundColor='#55A8D9'/>
                 <View style={styles.WelcomBar}>
-                    <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) }/>
+                    <Icon name="menu" size={30} color= 'white' onPress={ () => props.navigation.dispatch(DrawerActions.toggleDrawer()) }/>
                     <Text style={styles.WelcomBarText}>
                         welcome {user.surname}
                     </Text>
-                </View>
-
+                </View>                
                 <View style={styles.container}>
                     <Table borderStyle={{borderWidth: 2, borderColor: '#ffff'}}>
                     <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
                     </Table>
                     <ScrollView style={{backgroundColor:'#fff'}}>
-                    <Table borderStyle={{borderWidth: 1, borderColor: '#ffff'}}>
-                        {
-                            tableData.map((rowData, index) => (
-                            <TableWrapper key={index} style={index%2? styles.row2 : styles.row1}>
-                                {
-                                rowData.map((cellData, cellIndex) => (
-                                    <Cell  key={cellIndex} data={cellIndex === 1 ? element(index) : cellData} textStyle={styles.text}/>
+                        <Table borderStyle={{borderWidth: 1, borderColor: '#ffff'}}>
+                            {
+                                tableData.map((rowData, index) => (
+                                <TableWrapper key={index} style={index%2? styles.row2 : styles.row1}>
+                                    {
+                                    rowData.map((cellData, cellIndex) => (
+                                        <Cell  key={cellIndex} data={cellIndex === 1 ? element(rowData[0],index) : cellData} textStyle={styles.text}/>
+                                    ))
+                                    }
+                                </TableWrapper>
                                 ))
-                                }
-                            </TableWrapper>
-                            ))
-                        }
-                    </Table>
-                    <View style={styles.commentsContainer}>
-                        <TextInput
-                            style={{alignSelf:'center'}}
-                            onChangeText={(value) => setItemValue(value,18)}
-                            placeholder="Comments"
-                
-                        />
-                    </View>
-                        <View style={styles.buttomContainer}>
+                            }
+                        </Table>
+                        <View style={styles.commentStyle}>
+                            <Text> comment</Text>
+                            <TextInput
+                            //style={styles.input}
+                            onChangeText={text => setComment(text)}
+                            //value={comment}
+                            placeholder={image.report.comments}
+                            />
+                        </View>
+                        <View style={styles.buttomContainerStyle}>
                             <Button 
                                 icon={
                                     <Icon
@@ -138,7 +94,7 @@ function ReportTextInput ({navigation}){
                                 type="outline"
                                 containerStyle={{color:'black'}}
                                 titleStyle={{color:'black'}}
-                                onPress={   ()=>  navigation.navigate('PatientHome')   }
+                                onPress={   ()=>  props.navigation.navigate('PatientHome')   }
 
                                 />
                                 <Button 
@@ -155,7 +111,7 @@ function ReportTextInput ({navigation}){
                                 type="outline"
                                 containerStyle={{color:'black'}}
                                 titleStyle={{color:'black'}}
-                                onPress={uploadData}
+                                onPress={   ()=>   {  }}
 
                                 />
                         </View>
@@ -165,7 +121,7 @@ function ReportTextInput ({navigation}){
             </View>
             
         );
-        
+    
     
     
 }
@@ -187,22 +143,19 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
         
     },
-    container: { flex: 1, padding:0, paddingTop: 0 },
+    container: { flex: 1, padding:0, paddingTop: 0, backgroundColor: '#8BC0E0' },
     head: { height: 40, backgroundColor: '#FFFFFF' },
-    text: { margin: 6 ,alignSelf:'center'},
+    text: { margin: 6 },
     row1: { flexDirection: 'row', backgroundColor: '#8BC0E0' },
     row2: { flexDirection: 'row', backgroundColor: '#A3CBE3' },
-    buttomContainer: {
+    commentStyle:{flexDirection: 'row', backgroundColor: '#A3CBE3'},
+    buttomContainerStyle: {
         flex:1,
         backgroundColor:'#fff',
         flexDirection: 'row',
         alignSelf:'center',
         paddingBottom:20,
       },
-    commentsContainer:{
-        backgroundColor: '#8BC0E0'
-
-    },
     ButtonUploadStyle:{
         backgroundColor: '#38C829',
         margin:10,
@@ -223,4 +176,4 @@ const styles = StyleSheet.create({
         },
   });
 
-export default ReportTextInput;
+export default ReportShow;

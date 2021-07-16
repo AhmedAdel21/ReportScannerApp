@@ -11,7 +11,7 @@ function Camera ({navigation}){
     const [image, setimage] = useState('')
     const [cameraView, setcameraView ] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const user = useSelector(state => state.user)
+    var userId = useSelector(state => state.user.id)
     const imageCrop = useRef(null);
     var cameraRef = useRef(null);
     var spinnerAnimation = useRef(null);
@@ -20,10 +20,10 @@ function Camera ({navigation}){
     const takePicture = async () => {
         if (cameraRef) {
             waittingAnimation();
-          const options = { quality: 0.5, base64: false };
+          const options = {orientation:"portrait" , quality: 0.5, base64: false };
           const data = await cameraRef.takePictureAsync(options);
           console.log(data);
-          picTaken.push({img:data.uri,id:picTaken.length});
+          picTaken.push({img:data.uri,id: userId + '_' +picTaken.length});
           succeededAnimation();
           console.log(picTaken);
           setTimeout(function(){
@@ -54,6 +54,7 @@ function Camera ({navigation}){
             <RNCamera
             ref={ref => cameraRef = ref }
             style={styles.preview}
+            //flashMode={RNCamera.Constants.FlashMode.on}
             type={RNCamera.Constants.Type.back}
             androidCameraPermissionOptions={{
                 title: 'Permission to use camera',

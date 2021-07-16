@@ -17,7 +17,7 @@ function PicDetial (props){
     //<Animatable.View animation="fadeInRightBig" duration={2000}> </Animatable.View>
 
     const uploadImages = (pictaken) => {
-        //dispatch(photoUpload(pictaken));
+        dispatch(photoUpload(pictaken));
         navigate('ReportTextOutput')
     }
     const showModalFunction = (visible, imageURL) => {

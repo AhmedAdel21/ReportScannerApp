@@ -6,13 +6,13 @@ import {singup} from '../redux/user';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 
-const user = ['','','','','']
+const user = ['','','','','','']
 export default function Signup (props){
     const { navigate } = props.navigation;
     
     const inputRef = React.createRef();
     
-    const [asd,aa] = useState('');
+
     const [doctorFlag,setDoctorFlag] = useState(false);
     const [patientFlag,setPatientFlag] = useState(false);
     const [maleFlag,setMaleFlag] = useState(false);
@@ -48,16 +48,18 @@ export default function Signup (props){
             gender='female'
         }
         var newUser = {
-            phoneNumber:asd,
+            username:userData[0],
             password:userData[1],
             type:type,
-            firstName:userData[2],
-            lastName:userData[3],
+            speciality:speciality,
+            firstname:userData[2],
+            lastname:userData[3],
             email:userData[4],
-            gender:gender          
+            gender:gender,
+            birthdate:date        
           }
           console.log(newUser)
-        /*dispatch(singup(newUser))*/
+        dispatch(singup(newUser))
         /*inputRef.current.clear();*/
     }
     return(
@@ -76,7 +78,7 @@ export default function Signup (props){
                         placeholder='Phone number' inputContainerStyle={{borderBottomColor:'white'}} 
                         placeholderTextColor='#D6D8DA' 
                         keyboardType='numeric'
-                        onChangeText = {value  => aa(value)} 
+                        onChangeText = {value  => setUserInput(value,0)}  
                         ref={inputRef}  />
                     <Input  
                         placeholder='Password' inputContainerStyle={{borderBottomColor:'white'}} 
@@ -142,7 +144,7 @@ export default function Signup (props){
                             mode='date'
                             is24Hour={false}
                             display="spinner"
-                            onChange={(event, selectedDate) =>{SetDate(selectedDate);setShowDateTimePicker(false)}}
+                            onChange={(event, selectedDate) =>{SetDate(selectedDate || date);setShowDateTimePicker(false)}}
                             />
                     )}
                 </View>

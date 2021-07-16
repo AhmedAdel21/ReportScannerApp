@@ -6,6 +6,7 @@
  * @flow strict-local
  */
 import 'react-native-gesture-handler';
+import 'react-native-gesture-handler/Swipeable';
 import React from 'react';
 import Main from './components/mainComponent';
 import { Provider } from 'react-redux';

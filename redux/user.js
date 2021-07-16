@@ -4,14 +4,30 @@ import fetch from 'cross-fetch';
 import { useDispatch } from 'react-redux';
 
 export const signin = createAsyncThunk('redux/signin',async (loginData) => {
-  const response = await fetch (baseUrl + 'users/login',{
-                          method: "POST",
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify(loginData),
+  var res =''
 
-})
-  const res = await response.json();
-  console.log(res)
+  if (loginData.type == 'patient' ) {
+
+    const response = await fetch (baseUrl + 'users/login/patient',{
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(loginData),
+    })
+    res = await response.json();
+
+  }else if(loginData.type == 'doctor'){
+    const response = await fetch (baseUrl + 'users/login/doctor',{
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(loginData),
+    })
+    res = await response.json();
+
+  }else{
+    res = 'error in sign in';
+  }
+  
+  //console.log("res:  ",res);
   return res;
 
 })
@@ -19,14 +35,31 @@ export const signin = createAsyncThunk('redux/signin',async (loginData) => {
 export const singup = createAsyncThunk('redux/singup',async (newUser) => {
   
   console.log(newUser)
-  const response = await fetch (baseUrl + 'users/signup',{
-                            method: "POST",
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(newUser),
-    
-  })
-  const res = await response.json();
-  console.log(res)
+  var res =''
+  if (newUser.type == 'patient' ) {
+    const response = await fetch (baseUrl + 'users/signup/patient',{
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newUser),
+
+    })
+    res = await response.json();  
+    res.type = 'patient';
+  }else if(newUser.type == 'doctor'){
+    const response = await fetch (baseUrl + 'users/signup/doctor',{
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newUser),
+
+    })
+    res = await response.json();
+    res.type = 'doctor';
+  }else{
+    res = 'error in sign up';
+  }
+  
+  //console.log(res)
+  
   return res;
 
 })
@@ -120,21 +153,28 @@ const dummyData = [
 ]
 export const userSlice = createSlice({
     name: 'user',
-    initialState: {errMess: null,data:dummyData,firstname:'ahmed',surname:'adel',mobOrEmail:'',logedin:false,status: 'idle'},
+    initialState: {errMess: null,id:'',reports:[],type:'idl',data:dummyData,firstname:'ahmed',lastname:'adel',phone:'',email:'',logedin:false,status: 'idle'},
     reducers: {
-        ADD_USER: (state, action) => {
-          state.firstname = action.payload
+        USER_TYPE: (state, action) => {
+          state.type = action.payload
         }
     },
     extraReducers: {
       [signin.pending]: (state, action) => {
-        console.log('pending sigin in')
-        state.status = 'loading'
+        console.log('pending sigin in');
+        state.status = 'loading';
       },
       [signin.fulfilled]: (state, action) => {
-        state.status = 'succeeded'
-        console.log('succeeded sigin in')
-        state.logedin = true
+        state.status = 'succeeded';
+        // console.log('succeeded sidsgdsfasfasfgin in');
+        //console.log("action.payload",action.payload);
+        state.firstname=action.payload.firstname;
+        state.lastname =action.payload.lastname;
+        state.phone=action.payload.username;
+        state.email=action.payload.email;
+        state.id=action.payload._id;
+        state.reports = action.payload.reports;
+        state.logedin = true;
       },
       [signin.rejected]: (state, action) => {
         state.status = 'failed'
@@ -158,6 +198,5 @@ export const userSlice = createSlice({
     }
 })
 
-export const { ADD_USER} = userSlice.actions;
+export const { USER_TYPE} = userSlice.actions;
 export default userSlice.reducer;
-

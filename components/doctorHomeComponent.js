@@ -1,32 +1,71 @@
-import {FlatList, View, Text,StatusBar,StyleSheet,TouchableOpacity,Image,Modal,Button} from 'react-native';
+import {FlatList, View, Text,StatusBar,StyleSheet,TouchableOpacity,Alert,Animated} from 'react-native';
 import { ListItem, Avatar,Icon} from 'react-native-elements';
 import React,{useState,useRef}  from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import {DrawerActions } from '@react-navigation/native';
-
-
+import * as Animatable from 'react-native-animatable';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 function DoctorHome ({navigation}){
 
     const user = useSelector(state => state.user)
 
-    const dispatch = useDispatch()
+    const showAlert = () =>{
+        Alert.alert(
+            'Delete Favorite ?',
+            'Are you sure you wish to delete the favorite dish ' + '?',
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "OK", onPress: () => {console.log("OK Pressed"); } }
+            ],
+            { cancelable: false }
+          );
+    }
 
-    const renderMenuItem = ({item,index}) => {
+    const leftSwipe = () => {
+        return (
+          <>
+            <TouchableOpacity activeOpacity={0.6} onPress={showAlert} >
+              <View style={styles.deleteBox}>
+                <Animated.Text style={{color:'white',}}>
+                  Delete
+                </Animated.Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.6} onPress={showAlert} >
+            <View style={styles.shareBox}>
+              <Animated.Text style={{color:'white',}}>
+                share
+              </Animated.Text>
+            </View>
+          </TouchableOpacity>
+        </>
+        );
+      };
+
+    const renderReportItem = ({item,index}) => {
         return(
-            <ListItem bottomDivider>
-                <Avatar source={require('./images/LogoSmall.png')} />
-                <ListItem.Content>
-                    <ListItem.Title>{item.name}</ListItem.Title>
-                    <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle>
-                </ListItem.Content>
-                <ListItem.Chevron />
-            </ListItem>
-            
+            <Swipeable renderRightActions={leftSwipe} >
+                <Animatable.View animation="zoomIn" duration={2000}>
+                    <ListItem key={index.toString()} bottomDivider>
+                        <Avatar source={require('./images/LogoSmall.png')} />
+                        <ListItem.Content>
+                            <ListItem.Title>{item.name}</ListItem.Title>
+                            <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle>
+                        </ListItem.Content>
+                        <ListItem.Chevron />
+                    </ListItem>
+                </Animatable.View>
+            </Swipeable>
         );
     }
 
     return(
-        <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
+        <View style={{flex: 1}}>
+          <View style={{backgroundColor:'#55A8D9'}}>
             <StatusBar backgroundColor='#55A8D9'/>
             <View style={styles.WelcomBar}>
                 <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) }/>
@@ -34,11 +73,12 @@ function DoctorHome ({navigation}){
                     welcome Doctor {user.surname}
                 </Text>
             </View>
-            <View style={{flex:2}}>
+          </View>
+            <View style={styles.container}>
                 <FlatList
                     data={user.data}
                     keyExtractor={item => item.id.toString()}
-                    renderItem={renderMenuItem}
+                    renderItem={renderReportItem}
                 />
             </View>
             
@@ -94,9 +134,7 @@ const styles = StyleSheet.create({
         borderEndWidth:1,
         },
     container: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: 'black',
+        flex: 2
         },
     preview: {
         flex: 1,
@@ -112,7 +150,22 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         margin: 20,
         },
-
+    deleteBox: {
+        backgroundColor: 'red',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 70,
+        borderRadius:20,
+        flex:1
+      },
+    shareBox: {
+        backgroundColor: 'green',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius:20,
+        width: 70,
+        flex:1
+      }
   });
 
 export default DoctorHome;

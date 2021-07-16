@@ -4,65 +4,66 @@ import React,{useState}  from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import {DrawerActions } from '@react-navigation/native';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
-
+import { Loading } from './watingComponent';
+import {postReports} from '../redux/reports';
 function ReportTextOutput ({navigation}){
-    const [image, setimage] = useState('')
-   
+
     const user = useSelector(state => state.user)
+    var patientId = user.id;
+    const image = useSelector(state => state.image)
+    console.log("id : ",patientId);
     const dispatch = useDispatch()
+    var [comment, setComment] = useState(image.report.comments);
     var tableHead = ['Measurement', 'Value','Units'];
     var tableData = [
       ['RBC', 0, '10^6/ul'],
       ['HGB', 0, 'g/dl'],
-      ['HCT', 0, '%'],
+      ['НСТ', 0, '%'],
       ['MCV', 0, 'Um^3'],
-      ['MCH', 0, 'pg'],
+      ['МСH', 0, 'pg'],
       ['MCHC', 0, 'g/dl'],
       ['RDW', 0, '%'],
       ['WBC', 0, '10^3/ul'],
       ['LYM', 0, '%'],
-      ['LYM', 0, '10^3/ul'],
+      ['LYMP', 0, '10^3/ul'],
       ['MON', 0, '%'],
-      ['MON', 0, '10^3/ul'],
+      ['MONP', 0, '10^3/ul'],
       ['GRA', 0, '%'],
-      ['GRA', 0, '10^3/ul'],
+      ['GRAP', 0, '10^3/ul'],
       ['PLT', 0, '10^3/ul'],
       ['MPV', 0, 'Um^3'],
       ['PCT', 0, '%'],
-      ['PDW', 0, '%'],
+      ['PDW', 0, '%']
     ]
-    var dataInserted = [
-        ['RBC', ''],
-        ['HGB', ''],
-        ['HCT', ''],
-        ['MCV', ''],
-        ['MCH', ''],
-        ['MCHC',''],
-        ['RDW', ''],
-        ['WBC', ''],
-        ['LYM', ''],
-        ['LYM', ''],
-        ['MON', ''],
-        ['MON', ''],
-        ['GRA', ''],
-        ['GRA', ''],
-        ['PLT', ''],
-        ['MPV', ''],
-        ['PCT', ''],
-        ['PDW', ''],
-    ]
-    const element = (index) => (
+    
+    var dataInserted = [];
+    const element = (Measurement,index) => (
         <TextInput
         style={{alignSelf:'center'}}
         onChangeText={(value) => setItemValue(value,index)}
-        placeholder="***"
+        placeholder={image.report.measurments[Measurement.toString()]}
         keyboardType="numeric"
       />
-      );
+      )
     const setItemValue = (value,index) => {
         dataInserted[index][1] = value;
     }
+    const sendData = (dataInserted,patientId)=>{
+        var newReport = {}
+        dataInserted.forEach((item) => {
+            newReport[item[0]]=item[1];
+        })
+        newReport["patientId"] = patientId;
+        newReport["comment"] = comment;
+        newReport["date"] = new Date().toISOString();
+        console.log(newReport);
+        dispatch(postReports(newReport));
+    }
+    
+    if(image.status == 'succeeded Upload'){
 
+        
+        dataInserted = Object.entries(image.report.measurments);
         return(
             <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
                 <StatusBar backgroundColor='#55A8D9'/>
@@ -71,26 +72,34 @@ function ReportTextOutput ({navigation}){
                     <Text style={styles.WelcomBarText}>
                         welcome {user.surname}
                     </Text>
-                </View>
-
+                </View>                
                 <View style={styles.container}>
                     <Table borderStyle={{borderWidth: 2, borderColor: '#ffff'}}>
                     <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
                     </Table>
                     <ScrollView style={{backgroundColor:'#fff'}}>
-                    <Table borderStyle={{borderWidth: 1, borderColor: '#ffff'}}>
-                        {
-                            tableData.map((rowData, index) => (
-                            <TableWrapper key={index} style={index%2? styles.row2 : styles.row1}>
-                                {
-                                rowData.map((cellData, cellIndex) => (
-                                    <Cell  key={cellIndex} data={cellIndex === 1 ? element(index) : cellData} textStyle={styles.text}/>
+                        <Table borderStyle={{borderWidth: 1, borderColor: '#ffff'}}>
+                            {
+                                tableData.map((rowData, index) => (
+                                <TableWrapper key={index} style={index%2? styles.row2 : styles.row1}>
+                                    {
+                                    rowData.map((cellData, cellIndex) => (
+                                        <Cell  key={cellIndex} data={cellIndex === 1 ? element(rowData[0],index) : cellData} textStyle={styles.text}/>
+                                    ))
+                                    }
+                                </TableWrapper>
                                 ))
-                                }
-                            </TableWrapper>
-                            ))
-                        }
-                    </Table>
+                            }
+                        </Table>
+                        <View style={styles.commentStyle}>
+                            <Text> comment</Text>
+                            <TextInput
+                            //style={styles.input}
+                            onChangeText={text => setComment(text)}
+                            //value={comment}
+                            placeholder={image.report.comments}
+                            />
+                        </View>
                         <View style={styles.buttomContainerStyle}>
                             <Button 
                                 icon={
@@ -123,7 +132,7 @@ function ReportTextOutput ({navigation}){
                                 type="outline"
                                 containerStyle={{color:'black'}}
                                 titleStyle={{color:'black'}}
-                                onPress={   ()=>   {  console.log("data",dataInserted)   }}
+                                onPress={   ()=>   { sendData(dataInserted,patientId) }}
 
                                 />
                         </View>
@@ -133,7 +142,17 @@ function ReportTextOutput ({navigation}){
             </View>
             
         );
-        
+    }else if(image.errMess){
+        return(
+            <View>
+                <Text>{image.errMess}</Text>
+            </View>
+        );
+    }else {
+        return(
+            <Loading />
+        );
+    }
     
     
 }
@@ -160,6 +179,7 @@ const styles = StyleSheet.create({
     text: { margin: 6 },
     row1: { flexDirection: 'row', backgroundColor: '#8BC0E0' },
     row2: { flexDirection: 'row', backgroundColor: '#A3CBE3' },
+    commentStyle:{flexDirection: 'row', backgroundColor: '#A3CBE3'},
     buttomContainerStyle: {
         flex:1,
         backgroundColor:'#fff',
