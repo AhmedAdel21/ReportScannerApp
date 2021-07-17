@@ -1,10 +1,10 @@
-import {View, Text,StatusBar,StyleSheet,TouchableOpacity,TextInput,ScrollView } from 'react-native';
+import {View, Text,StatusBar,StyleSheet,Modal,Pressable,TouchableOpacity,TextInput,ScrollView } from 'react-native';
 import {Button,Icon} from 'react-native-elements';
 import React,{useState}  from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import {DrawerActions } from '@react-navigation/native';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
-import {postReports} from '../redux/reports';
+import {getReports,postReports} from '../redux/user';
 
 var dataInserted = [
     ['RBC', ''],
@@ -25,7 +25,8 @@ var dataInserted = [
     ['MPV', ''],
     ['PCT', ''],
     ['PDW', ''],
-    ['comments','']
+    ['comment',''],
+    ['name','']
 ]
 
 function ReportTextInput ({navigation}){
@@ -86,9 +87,43 @@ function ReportTextInput ({navigation}){
         sendingData["date"] = new Date().toISOString();
         console.log('data',sendingData);
         dispatch(postReports(sendingData));
+        dispatch(getReports());
+        navigation.navigate('PatientHome');
     }
+    const [modalVisible, setModalVisible] = useState(false);
         return(
             <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {setModalVisible(!modalVisible);}}
+                >
+                    <View style={styles.centeredView} opacity={0.9} >
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Report's Name</Text>
+                        <TextInput
+                            style={styles.modelInput}
+                            onChangeText={(value) => setItemValue(value,19)}
+                            placeholder="Name ..."
+                        />
+                        <View style={styles.modalButtons}>
+                            <Pressable
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => setModalVisible(!modalVisible)}
+                            >
+                            <Text style={styles.textStyle}>close</Text>
+                            </Pressable>
+                            <Pressable
+                            style={[styles.button, styles.buttonOpen]}
+                            onPress={() => {setModalVisible(!modalVisible);uploadData();}}
+                            >
+                            <Text style={styles.textStyle}>OK</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                    </View>
+                </Modal>
                 <StatusBar backgroundColor='#55A8D9'/>
                 <View style={styles.WelcomBar}>
                     <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) }/>
@@ -155,7 +190,7 @@ function ReportTextInput ({navigation}){
                                 type="outline"
                                 containerStyle={{color:'black'}}
                                 titleStyle={{color:'black'}}
-                                onPress={uploadData}
+                                onPress={() => { setModalVisible(true); }}
 
                                 />
                         </View>
@@ -167,7 +202,7 @@ function ReportTextInput ({navigation}){
         );
         
     
-    
+        
 }
 
 
@@ -221,6 +256,60 @@ const styles = StyleSheet.create({
             borderColor:'white',
             borderEndWidth:1,
         },
+        centeredView: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 22
+          },
+          modalView: {
+            backgroundColor: "white",
+            borderRadius: 20,
+            padding: 35,
+            alignItems: "center",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5
+          },
+          modalButtons:{
+            flexDirection:'row',
+          },
+          button: {
+            borderRadius: 20,
+            width: 60,
+            padding: 10,
+            elevation: 2,
+            margin:10,
+            marginBottom: 0,
+          },
+          buttonOpen: {
+            backgroundColor: 'green',
+          },
+          buttonClose: {
+            backgroundColor: 'red',
+          },
+          textStyle: {
+            color: "white",
+            fontWeight: "bold",
+            textAlign: "center"
+          },
+          modalText: {
+            marginBottom: 15,
+            textAlign: "center"
+          },
+          modelInput:{
+              borderColor:'#55A8D9',
+              borderWidth:1,
+              padding:10,
+              width:130,
+              borderRadius:10,
+              marginBottom:10
+          }
   });
 
 export default ReportTextInput;

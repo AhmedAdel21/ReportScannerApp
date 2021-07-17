@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {baseUrl} from '../shared/baseUrl';
 import fetch from 'cross-fetch';
 import { useDispatch } from 'react-redux';
-export const postReports = createAsyncThunk('redux/postreports',async (report) => {
+export const assignDoctor = createAsyncThunk('redux/assignDoctor',async (doctorID) => {
     //console.log(report);
   //console.log(newReport)
     const response = await fetch (baseUrl + 'report',{
@@ -15,7 +15,7 @@ export const postReports = createAsyncThunk('redux/postreports',async (report) =
 
 })
 
-export const getReports = createAsyncThunk('redux/getReports',async () => {
+export const fetchDoctors = createAsyncThunk('redux/fetchDoctors',async () => {
   console.log("response");
   const response = await fetch (baseUrl + 'report')
   response = await response.json();
@@ -25,50 +25,50 @@ export const getReports = createAsyncThunk('redux/getReports',async () => {
 })
 
 
-export const reportSlice = createSlice({
-    name: 'report',
-    initialState: {errMess: null,reports:[],status: 'idle'},
+export const doctorSlice = createSlice({
+    name: 'doctor',
+    initialState: {errMess: null,doctorsData:[],status: 'idle'},
     reducers: {
         SEND_REPORTS: (state, action) => {state.reports.push(action.payload) }
     },
     extraReducers:  {
-      [postReports.pending]: (state, action) => {
-        console.log('pending postReports in');
+      [assignDoctor.pending]: (state, action) => {
+        console.log('pending assignDoctor ');
         state.status = 'loading';
       },
-      [postReports.fulfilled]: (state, action) => {
+      [assignDoctor.fulfilled]: (state, action) => {
         state.status = 'succeeded';
-        console.log('succeeded in postReports');
+        console.log('succeeded in assignDoctor');
         console.log("res:  ",action.payload);
         // setTimeout(() => {
         //   useDispatch(ADD_REPORTS(action.payload))
         // }, 2000);
         //console.log("action.payload",action.payload);
       },
-      [postReports.rejected]: (state, action) => {
+      [assignDoctor.rejected]: (state, action) => {
         state.status = 'failed'
-        console.log('failed sigin in')
+        console.log('failed assignDoctor')
         state.errMess = action.error.message
       },
-      [getReports.pending]: (state, action) => {
-        console.log('pending sigin in');
+      [fetchDoctors.pending]: (state, action) => {
+        console.log('pending fetchDoctors');
         state.status = 'loading';
       },
-      [getReports.fulfilled]: (state, action) => {
+      [fetchDoctors.fulfilled]: (state, action) => {
         state.status = 'succeeded';
-        console.log('succeeded in getReports');
-        state.reports = action.payload;
+        console.log('succeeded in fetchDoctors');
+        state.doctorsData = action.payload;
         console.log(state.reports);
         //console.log("action.payload",action.payload);
       },
-      [getReports.rejected]: (state, action) => {
+      [fetchDoctors.rejected]: (state, action) => {
         state.status = 'failed';
-        console.log('failed sigin in');
+        console.log('failed fetchDoctors');
         state.errMess = action.error.message;
       },
     }
 })
 
-export const { SEND_REPORTS} = reportSlice.actions;
-export default reportSlice.reducer;
+export const { SEND_REPORTS} = doctorSlice.actions;
+export default doctorSlice.reducer;
 

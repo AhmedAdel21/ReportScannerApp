@@ -20,6 +20,7 @@ export const photoUpload = createAsyncThunk('redux/photoUpload',async (photos) =
     for (let photo in photoArray){
       formData.append('fileData', photoArray[photo]);
     }
+    //console.log("formData",formData);
     console.log("photo: ",photoArray)
   const response = await fetch (baseUrl + 'image/upload', {
                               method: "POST",

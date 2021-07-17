@@ -15,6 +15,8 @@ import Signup from './signupComponents';
 import ReportTextInput from './reportInputComponent';
 import ReportTextOutput from './ocrOutputComponent';
 import DoctorHome from './doctorHomeComponent';
+import ReportShow from './reportShow';
+import ChooseDoctor from './chooseDoctorComponent';
 const Stack  = createStackNavigator(); 
 const Drawer = createDrawerNavigator();
 
@@ -27,6 +29,8 @@ const PatientHomeNavigator = ({ navigation }) => {
             <Stack.Screen name="PicDetial" component={PicDetial}  />
             <Stack.Screen name="ReportTextInput" component={ReportTextInput}  />
             <Stack.Screen name="ReportTextOutput" component={ReportTextOutput}  />
+            <Stack.Screen name="ReportShow" component={ReportShow}  />
+            <Stack.Screen name="ChooseDoctor" component={ChooseDoctor}  />
         </Stack.Navigator>
     );
 
@@ -35,6 +39,7 @@ const DoctortHomeNavigator = ({ navigation }) => {
     return(
         <Stack.Navigator initialRouteName="DoctorHome" screenOptions={{headerShown: false}} >
             <Stack.Screen name="DoctorHome" component={DoctorHome}  />
+            <Stack.Screen name="ReportShow" component={ReportShow}  />
         </Stack.Navigator>
     );
 

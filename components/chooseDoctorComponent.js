@@ -1,26 +1,26 @@
 import {FlatList, View, Text,StatusBar,StyleSheet,TouchableOpacity,Alert,Animated} from 'react-native';
 import { ListItem, Avatar,Icon} from 'react-native-elements';
-import React,{useState}  from 'react';
+import React,{useState,useEffect}  from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import {DrawerActions } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import {deletReports} from '../redux/user';
+import {fetchDoctors} from '../redux/doctor';
 
 const RenderItems = (props) => {
     const item = props.item;
     const index = props.index;
     const showAlert = () =>{
         Alert.alert(
-            'Delete Report ?',
-            'Are you sure you wish to delete this report ' + '?',
+            'Delete Favorite ?',
+            'Are you sure you wish to delete the favorite dish ' + '?',
             [
               {
                 text: "Cancel",
                 onPress: () => console.log("Cancel Pressed"),
                 style: "cancel"
               },
-              { text: "OK", onPress: () => {props.deleteReport();console.log("OK Pressed"); } }
+              { text: "OK", onPress: () => {console.log("OK Pressed"); } }
             ],
             { cancelable: false }
           );
@@ -36,7 +36,7 @@ const RenderItems = (props) => {
                 </Animated.Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.6} onPress={()=>props.navigation.navigate('ChooseDoctor')} >
+            <TouchableOpacity activeOpacity={0.6} onPress={showAlert} >
             <View style={styles.shareBox}>
               <Animated.Text style={{color:'white',}}>
                 share
@@ -51,12 +51,12 @@ const RenderItems = (props) => {
     return(
             <Swipeable renderRightActions={leftSwipe} >
                 <Animatable.View animation="zoomIn" duration={500}>
-                    <TouchableOpacity activeOpacity={0.6} onPress={()=>props.navigation.navigate('ReportShow',{ report: item })} > 
+                    <TouchableOpacity activeOpacity={0.6} onPress={()=>{console.log("choosen doctor",item.firstname )}} > 
                         <ListItem bottomDivider>
                             <Avatar source={require('./images/LogoSmall.png')} />
                             <ListItem.Content>
-                                <ListItem.Title>{item.name}</ListItem.Title>
-                                <ListItem.Subtitle>{date.toLocaleDateString()}</ListItem.Subtitle>
+                                <ListItem.Title> {"doctor" + item.firstname +  " " + item.lastname }</ListItem.Title>
+                                <ListItem.Subtitle>{item.speciality}</ListItem.Subtitle>
                             </ListItem.Content>
                             <ListItem.Chevron />
                         </ListItem>
@@ -67,18 +67,23 @@ const RenderItems = (props) => {
         );
     
 }
-function PatientHome ({navigation}){
+function ChooseDoctor ({navigation}){
 
-    const user = useSelector(state => state.user);
-    const userReports = user.reports;
+    
     const dispatch = useDispatch();
     //console.log("userReports",userReports);
-    const deleteReport = (id) => {dispatch(deletReports(id))} ;
+
+    useEffect(() => {
+        dispatch(fetchDoctors());
+    }, [dispatch]);
+
+
+    const doctors = useSelector(state => state.doctor.doctorsData);
     
     const renderReportItem = ({item,index}) => {
         
         return(
-        <RenderItems item={item} index={item._id} navigation={navigation} deleteReport={ () => deleteReport(item._id)}/>
+        <RenderItems item={item} index={item._id} navigation={navigation} />
         );
     }
     return(
@@ -94,7 +99,7 @@ function PatientHome ({navigation}){
             </View>
             <View style={{flex:2}}>
                 <FlatList
-                    data={userReports}
+                    data={doctors}
                     keyExtractor={(item) => item._id.toString()}
                     renderItem={renderReportItem}
                 />
@@ -200,4 +205,4 @@ const styles = StyleSheet.create({
 
   });
 
-export default PatientHome;
+export default ChooseDoctor;

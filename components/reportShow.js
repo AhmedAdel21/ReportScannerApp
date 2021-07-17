@@ -8,10 +8,9 @@ import { Loading } from './watingComponent';
 import {postReports} from '../redux/reports';
 function ReportShow (props){
 
-    const report = useSelector(state => state.user.reports)
-    var patientId = user.id;
-    const image = useSelector(state => state.image)
-    console.log("id : ",patientId);
+    const report = props.route.params.report;
+    const userName = useSelector(state => state.user.firstname)
+    console.log("reportShow report",report);
     var tableHead = ['Measurement', 'Value','Units'];
     var tableData = [
       ['RBC', 0, '10^6/ul'],
@@ -37,9 +36,9 @@ function ReportShow (props){
     const element = (Measurement,index) => (
         <TextInput
         style={{alignSelf:'center'}}
-        onChangeText={(value) => setItemValue(value,index)}
-        placeholder={image.report.measurments[Measurement.toString()]}
+        placeholder={report[Measurement.toString()] == null ? "***":report[Measurement.toString()].toString() }
         keyboardType="numeric"
+        editable={false}
       />
       )
 
@@ -49,7 +48,7 @@ function ReportShow (props){
                 <View style={styles.WelcomBar}>
                     <Icon name="menu" size={30} color= 'white' onPress={ () => props.navigation.dispatch(DrawerActions.toggleDrawer()) }/>
                     <Text style={styles.WelcomBarText}>
-                        welcome {user.surname}
+                        welcome {userName}
                     </Text>
                 </View>                
                 <View style={styles.container}>
@@ -76,7 +75,7 @@ function ReportShow (props){
                             //style={styles.input}
                             onChangeText={text => setComment(text)}
                             //value={comment}
-                            placeholder={image.report.comments}
+                            placeholder={report.comment}
                             />
                         </View>
                         <View style={styles.buttomContainerStyle}>
