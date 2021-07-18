@@ -36,7 +36,7 @@ const RenderItems = (props) => {
                 </Animated.Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.6} onPress={()=>props.navigation.navigate('ChooseDoctor')} >
+            <TouchableOpacity activeOpacity={0.6} onPress={()=>props.navigation.navigate('ChooseDoctor',{reportId:index})} >
             <View style={styles.shareBox}>
               <Animated.Text style={{color:'white',}}>
                 share
@@ -78,8 +78,8 @@ function PatientHome ({navigation}){
     const renderReportItem = ({item,index}) => {
         
         return(
-        <RenderItems item={item} index={item._id} navigation={navigation} deleteReport={ () => deleteReport(item._id)}/>
-        );
+            <RenderItems item={item} index={item._id} navigation={navigation} deleteReport={ () => deleteReport(item._id)}/>
+            );
     }
     return(
         <View style={{flex: 1}}>

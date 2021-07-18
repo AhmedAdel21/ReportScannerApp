@@ -86,8 +86,9 @@ export const postReports = createAsyncThunk('redux/postreports',async (report) =
 return res;
 
 })
+
 export const deletReports = createAsyncThunk('redux/deletReports',async (reportId) => {
-console.log("report id",reportId)
+  console.log("report id",reportId)
   const response = await fetch (baseUrl + 'report/'+reportId ,{
     method: "DELETE",
     headers: { 'Content-Type': 'application/json' },
@@ -95,7 +96,7 @@ console.log("report id",reportId)
   const res = await response.json();
   console.log("res",res);
   console.log(res);
-return res; 
+  return res; 
 
 })
 const dummyData = [
@@ -187,7 +188,7 @@ const dummyData = [
 ]
 export const userSlice = createSlice({
     name: 'user',
-    initialState: {errMess: null,id:'',reports:[],type:'idl',data:dummyData,firstname:'ahmed',lastname:'adel',phone:'',email:'',logedin:false,status: 'idle'},
+    initialState: {errMess: null,id:'',reports:[],type:'idl',data:dummyData,firstname:'ahmed',lastname:'adel',phone:'',email:'',logedin:false,status: 'idle',speciality:'',gender:'',birthdate:''},
     reducers: {
         USER_TYPE: (state, action) => {
           state.type = action.payload
@@ -204,15 +205,19 @@ export const userSlice = createSlice({
       [signin.fulfilled]: (state, action) => {
         state.status = 'succeeded';
         // console.log('succeeded sidsgdsfasfasfgin in');
-        //console.log("action.payload",action.payload);
-        
+        console.log("action.payload",action.payload);
         state.firstname=action.payload.firstname;
         state.lastname =action.payload.lastname;
         state.phone=action.payload.username;
         state.email=action.payload.email;
+        state.birthdate = action.payload.birthdate;
+        state.gender = action.payload.gender;
         state.id=action.payload._id;
         state.reports = action.payload.reports;
         state.logedin = true;
+        if(state.type=='patient'){
+          state.speciality = action.payload.speciality;
+        }
       },
       [signin.rejected]: (state, action) => {
         state.status = 'failed'

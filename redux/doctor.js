@@ -2,13 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {baseUrl} from '../shared/baseUrl';
 import fetch from 'cross-fetch';
 import { useDispatch } from 'react-redux';
-export const assignDoctor = createAsyncThunk('redux/assignDoctor',async (doctorID) => {
-    //console.log(report);
-  //console.log(newReport)
-    const response = await fetch (baseUrl + 'report',{
+export const assignDoctor = createAsyncThunk('redux/assignDoctor',async (dataSend) => {
+
+    const response = await fetch (baseUrl + 'doctor',{
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(report),
+      body: JSON.stringify(dataSend),
     })
     const res = await response.json();
   return res;
@@ -16,11 +15,9 @@ export const assignDoctor = createAsyncThunk('redux/assignDoctor',async (doctorI
 })
 
 export const fetchDoctors = createAsyncThunk('redux/fetchDoctors',async () => {
-  console.log("response");
-  const response = await fetch (baseUrl + 'report')
-  response = await response.json();
-  console.log("response",response);
-  return response;
+  const response = await fetch (baseUrl + 'doctor')
+  const res = await response.json();
+  return res;
 
 })
 
@@ -40,10 +37,6 @@ export const doctorSlice = createSlice({
         state.status = 'succeeded';
         console.log('succeeded in assignDoctor');
         console.log("res:  ",action.payload);
-        // setTimeout(() => {
-        //   useDispatch(ADD_REPORTS(action.payload))
-        // }, 2000);
-        //console.log("action.payload",action.payload);
       },
       [assignDoctor.rejected]: (state, action) => {
         state.status = 'failed'
@@ -58,13 +51,12 @@ export const doctorSlice = createSlice({
         state.status = 'succeeded';
         console.log('succeeded in fetchDoctors');
         state.doctorsData = action.payload;
-        console.log(state.reports);
-        //console.log("action.payload",action.payload);
       },
       [fetchDoctors.rejected]: (state, action) => {
         state.status = 'failed';
         console.log('failed fetchDoctors');
         state.errMess = action.error.message;
+        console.log(state.errMess);
       },
     }
 })

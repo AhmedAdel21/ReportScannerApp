@@ -15,12 +15,16 @@ export const postReports = createAsyncThunk('redux/postreports',async (report) =
 
 })
 
-export const getReports = createAsyncThunk('redux/getReports',async () => {
+export const getReports = createAsyncThunk('redux/getReports',async (doctorReports) => {
   console.log("response");
-  const response = await fetch (baseUrl + 'report')
-  response = await response.json();
-  console.log("response",response);
-  return response;
+  const response = await fetch (baseUrl + 'report/doctorReports',{
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(doctorReports),
+  })
+  const res = await response.json();
+  console.log("response",res);
+  return res;
 
 })
 
@@ -58,7 +62,7 @@ export const reportSlice = createSlice({
         state.status = 'succeeded';
         console.log('succeeded in getReports');
         state.reports = action.payload;
-        console.log(state.reports);
+        //console.log(state.reports);
         //console.log("action.payload",action.payload);
       },
       [getReports.rejected]: (state, action) => {

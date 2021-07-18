@@ -1,65 +1,86 @@
 import {FlatList, View, Text,StatusBar,StyleSheet,TouchableOpacity,Alert,Animated} from 'react-native';
 import { ListItem, Avatar,Icon} from 'react-native-elements';
-import React,{useState,useRef}  from 'react';
+import React,{useState,useEffect}  from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import {DrawerActions } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-function DoctorHome ({navigation}){
+import {getReports} from '../redux/reports';
 
-    const user = useSelector(state => state.user)
 
-    const showAlert = () =>{
-        Alert.alert(
-            'Delete Favorite ?',
-            'Are you sure you wish to delete the favorite dish ' + '?',
-            [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel"
-              },
-              { text: "OK", onPress: () => {console.log("OK Pressed"); } }
-            ],
-            { cancelable: false }
-          );
-    }
+const RenderItems = (props) => {
+  const data = props.item.report;
+  const index = props.index;
+  var date = new Date(props.item.assignDate);
+  const showAlert = () =>{
+      Alert.alert(
+          'Delete Report ?',
+          'Are you sure you wish to delete this report ' + '?',
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel"
+            },
+            { text: "OK", onPress: () => {console.log("OK Pressed"); } }
+          ],
+          { cancelable: false }
+        );
+  }
 
-    const leftSwipe = () => {
-        return (
-          <>
-            <TouchableOpacity activeOpacity={0.6} onPress={showAlert} >
-              <View style={styles.deleteBox}>
-                <Animated.Text style={{color:'white',}}>
-                  Delete
-                </Animated.Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.6} onPress={showAlert} >
-            <View style={styles.shareBox}>
+  const leftSwipe = () => {
+      return (
+        <>
+          <TouchableOpacity activeOpacity={0.6} onPress={showAlert} >
+            <View style={styles.deleteBox}>
               <Animated.Text style={{color:'white',}}>
-                share
+                Delete
               </Animated.Text>
             </View>
           </TouchableOpacity>
-        </>
-        );
-      };
+      </>
+      );
+    };
+
+  
+  return(
+          <Swipeable renderRightActions={leftSwipe} >
+              <Animatable.View animation="zoomIn" duration={500}>
+                  <TouchableOpacity activeOpacity={0.6} onPress={()=>props.navigation.navigate('ReportShow',{ report: data })} > 
+                      <ListItem bottomDivider>
+                          <Avatar source={require('./images/LogoSmall.png')} />
+                          <ListItem.Content>
+                              <ListItem.Title>{data.name}</ListItem.Title>
+                              <ListItem.Subtitle>{date.toLocaleDateString()}</ListItem.Subtitle>
+                          </ListItem.Content>
+                          <ListItem.Chevron />
+                      </ListItem>
+                  </TouchableOpacity>
+              </Animatable.View>
+          </Swipeable>
+          
+      );
+  
+}
+
+function DoctorHome ({navigation}){
+
+    const user = useSelector(state => state.user)
+    const doctorReports = user.reports;
+    const dispatch = useDispatch();
+
+    // const deleteReport = (id) => {dispatch(deletReports(id))} ;
+    useEffect(() => {
+      dispatch(getReports(doctorReports));
+    }, [dispatch]);
+
+    const patientReports = useSelector(state => state.report.reports)
+
+
 
     const renderReportItem = ({item,index}) => {
-        return(
-            <Swipeable renderRightActions={leftSwipe} >
-                <Animatable.View animation="zoomIn" duration={2000}>
-                    <ListItem key={index.toString()} bottomDivider>
-                        <Avatar source={require('./images/LogoSmall.png')} />
-                        <ListItem.Content>
-                            <ListItem.Title>{item.name}</ListItem.Title>
-                            <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle>
-                        </ListItem.Content>
-                        <ListItem.Chevron />
-                    </ListItem>
-                </Animatable.View>
-            </Swipeable>
+      return(
+        <RenderItems item={item} index={item.report._id} navigation={navigation} />
         );
     }
 
@@ -70,14 +91,14 @@ function DoctorHome ({navigation}){
             <View style={styles.WelcomBar}>
                 <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) }/>
                 <Text style={styles.WelcomBarText}>
-                    welcome Doctor {user.surname}
+                    welcome Doctor {user.firstname}
                 </Text>
             </View>
           </View>
             <View style={styles.container}>
                 <FlatList
-                    data={user.data}
-                    keyExtractor={item => item.id.toString()}
+                    data={patientReports}
+                    keyExtractor={item => item.report._id.toString()}
                     renderItem={renderReportItem}
                 />
             </View>

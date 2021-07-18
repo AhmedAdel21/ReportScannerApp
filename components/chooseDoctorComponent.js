@@ -5,22 +5,22 @@ import { useSelector,useDispatch } from 'react-redux';
 import {DrawerActions } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import {fetchDoctors} from '../redux/doctor';
+import {fetchDoctors,assignDoctor} from '../redux/doctor';
 
 const RenderItems = (props) => {
     const item = props.item;
     const index = props.index;
     const showAlert = () =>{
         Alert.alert(
-            'Delete Favorite ?',
-            'Are you sure you wish to delete the favorite dish ' + '?',
+            'Send the report to Doctor: ' + item.firstname +'',
+            'Are you sure you want to send this report ?',
             [
               {
                 text: "Cancel",
                 onPress: () => console.log("Cancel Pressed"),
                 style: "cancel"
               },
-              { text: "OK", onPress: () => {console.log("OK Pressed"); } }
+              { text: "OK", onPress: () => {props.reportAssign()}   }
             ],
             { cancelable: false }
           );
@@ -30,16 +30,9 @@ const RenderItems = (props) => {
         return (
           <>
             <TouchableOpacity activeOpacity={0.6} onPress={showAlert} >
-              <View style={styles.deleteBox}>
-                <Animated.Text style={{color:'white',}}>
-                  Delete
-                </Animated.Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.6} onPress={showAlert} >
             <View style={styles.shareBox}>
               <Animated.Text style={{color:'white',}}>
-                share
+                profile
               </Animated.Text>
             </View>
           </TouchableOpacity>
@@ -47,15 +40,16 @@ const RenderItems = (props) => {
         );
       };
 
-    var date = new Date(item.date);
+
+
     return(
             <Swipeable renderRightActions={leftSwipe} >
                 <Animatable.View animation="zoomIn" duration={500}>
-                    <TouchableOpacity activeOpacity={0.6} onPress={()=>{console.log("choosen doctor",item.firstname )}} > 
+                    <TouchableOpacity activeOpacity={0.6} onPress={showAlert} > 
                         <ListItem bottomDivider>
                             <Avatar source={require('./images/LogoSmall.png')} />
                             <ListItem.Content>
-                                <ListItem.Title> {"doctor" + item.firstname +  " " + item.lastname }</ListItem.Title>
+                                <ListItem.Title> {"Doctor: " + item.firstname +  " " + item.lastname }</ListItem.Title>
                                 <ListItem.Subtitle>{item.speciality}</ListItem.Subtitle>
                             </ListItem.Content>
                             <ListItem.Chevron />
@@ -67,11 +61,11 @@ const RenderItems = (props) => {
         );
     
 }
-function ChooseDoctor ({navigation}){
+function ChooseDoctor (props){
 
-    
+    const reportId = props.route.params.reportId;
     const dispatch = useDispatch();
-    //console.log("userReports",userReports);
+    
 
     useEffect(() => {
         dispatch(fetchDoctors());
@@ -79,11 +73,25 @@ function ChooseDoctor ({navigation}){
 
 
     const doctors = useSelector(state => state.doctor.doctorsData);
+    const user = useSelector(state => state.user);
     
+    const reportAssign = (doctorId) => {
+        var date = new Date();
+        const dataSend ={
+            doctorId:doctorId,
+            PatientId:user.id,
+            reportId:reportId,
+            patientName:user.firstname,
+            gender:user.gender,
+            email:user.email,
+            date:date
+        }
+        
+        dispatch(assignDoctor(dataSend))    } ;
     const renderReportItem = ({item,index}) => {
         
         return(
-        <RenderItems item={item} index={item._id} navigation={navigation} />
+        <RenderItems item={item} index={item._id} reportAssign={()=>reportAssign(item._id)} navigation={props.navigation} />
         );
     }
     return(
