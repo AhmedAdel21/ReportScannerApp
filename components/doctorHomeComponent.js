@@ -5,7 +5,7 @@ import { useSelector,useDispatch } from 'react-redux';
 import {DrawerActions } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import {getReports} from '../redux/reports';
+import {getReports,deletReports} from '../redux/reports';
 
 
 const RenderItems = (props) => {
@@ -15,14 +15,14 @@ const RenderItems = (props) => {
   const showAlert = () =>{
       Alert.alert(
           'Delete Report ?',
-          'Are you sure you wish to delete this report ' + '?',
+          'Are you sure you wish to delete this report ?',
           [
             {
               text: "Cancel",
               onPress: () => console.log("Cancel Pressed"),
               style: "cancel"
             },
-            { text: "OK", onPress: () => {console.log("OK Pressed"); } }
+            { text: "OK", onPress: () => {props.deleteReport();console.log("OK Pressed"); } }
           ],
           { cancelable: false }
         );
@@ -69,7 +69,7 @@ function DoctorHome ({navigation}){
     const doctorReports = user.reports;
     const dispatch = useDispatch();
 
-    // const deleteReport = (id) => {dispatch(deletReports(id))} ;
+    const deleteReport = (id) => {dispatch(deletReports(id))} ;
     useEffect(() => {
       dispatch(getReports(doctorReports));
     }, [dispatch]);
@@ -80,7 +80,7 @@ function DoctorHome ({navigation}){
 
     const renderReportItem = ({item,index}) => {
       return(
-        <RenderItems item={item} index={item.report._id} navigation={navigation} />
+        <RenderItems item={item} index={item.report._id} navigation={navigation} deleteReport={ () => deleteReport(item.report._id)}/>
         );
     }
 
