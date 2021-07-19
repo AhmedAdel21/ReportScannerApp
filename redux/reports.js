@@ -81,7 +81,7 @@ export const reportSlice = createSlice({
       },
       [getReports.rejected]: (state, action) => {
         state.status = 'failed';
-        console.log('failed sigin in');
+        console.log('failed getReports');
         state.errMess = action.error.message;
       },
       [deletReports.pending]: (state, action) => {
@@ -91,11 +91,16 @@ export const reportSlice = createSlice({
       [deletReports.fulfilled]: (state, action) => {
         state.status = 'succeeded';
         console.log('succeeded in deletReports'); 
-        for(let{ report} of state.reports){
+        // for(let{ report} of state.reports){
           
-        }
-        console.log("report deleted",state.reports.map((report)=>{report.report.find((report) => report.reportId===action.payload).pop()});
+        // }
+        console.log("action payload", action.payload);
+        // console.log("doctor reports",state.reports);
+        // console.log("delet report",  );
+
+        state.reports = state.reports.filter(  (report) =>  report.report._id != action.payload );
         
+        // console.log("report deleted",state.reports.map((report)=>{report.report.find((report) => report.reportId===action.payload)});
         
       },
       [deletReports.rejected]: (state, action) => {
