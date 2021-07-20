@@ -1,5 +1,5 @@
 import {View, Text,StatusBar,StyleSheet,TouchableOpacity,TextInput,ScrollView } from 'react-native';
-import {Button,Icon} from 'react-native-elements';
+import {Button,Icon,Tooltip} from 'react-native-elements';
 import React,{useState}  from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import {DrawerActions } from '@react-navigation/native';
@@ -13,24 +13,24 @@ function ReportShow (props){
     console.log("reportShow report",report);
     var tableHead = ['Measurement', 'Value','Units'];
     var tableData = [
-      ['RBC', 0, '10^6/ul'],
-      ['HGB', 0, 'g/dl'],
-      ['НСТ', 0, '%'],
-      ['MCV', 0, 'Um^3'],
-      ['МСH', 0, 'pg'],
-      ['MCHC', 0, 'g/dl'],
-      ['RDW', 0, '%'],
-      ['WBC', 0, '10^3/ul'],
-      ['LYM', 0, '%'],
-      ['LYMP', 0, '10^3/ul'],
-      ['MON', 0, '%'],
-      ['MONP', 0, '10^3/ul'],
-      ['GRA', 0, '%'],
-      ['GRAP', 0, '10^3/ul'],
-      ['PLT', 0, '10^3/ul'],
-      ['MPV', 0, 'Um^3'],
-      ['PCT', 0, '%'],
-      ['PDW', 0, '%']
+      ['RBC', 0, '10^6/ul',''],
+      ['HGB', 0, 'g/dl',''],
+      ['НСТ', 0, '%',''],
+      ['MCV', 0, 'Um^3',''],
+      ['МСH', 0, 'pg',''],
+      ['MCHC', 0, 'g/dl',''],
+      ['RDW', 0, '%',''],
+      ['WBC', 0, '10^3/ul',''],
+      ['LYM', 0, '%',''],
+      ['LYMP', 0, '10^3/ul',''],
+      ['MON', 0, '%',''],
+      ['MONP', 0, '10^3/ul',''],
+      ['GRA', 0, '%',''],
+      ['GRAP', 0, '10^3/ul',''],
+      ['PLT', 0, '10^3/ul',''],
+      ['MPV', 0, 'Um^3',''],
+      ['PCT', 0, '%',''],
+      ['PDW', 0, '%','']
     ]
     
     const element = (Measurement,index) => (
@@ -62,9 +62,18 @@ function ReportShow (props){
                                 <TableWrapper key={index} style={index%2? styles.row2 : styles.row1}>
                                     {
                                     rowData.map((cellData, cellIndex) => (
+                                        cellIndex !=3?
                                         <Cell  key={cellIndex} data={cellIndex === 1 ? element(rowData[0],index) : cellData} textStyle={styles.text}/>
+                                        : 
+                                        <Tooltip  containerStyle={{margin:0,padding:0}} popover={<Text>Info here</Text>}>
+                                        <Icon style={{margin:10}} name="exclamation-circle" type='font-awesome' 
+                                            size={30} color= 'yellow'/>
+                                    </Tooltip>
                                     ))
                                     }
+                                   
+                                    
+                                   
                                 </TableWrapper>
                                 ))
                             }
