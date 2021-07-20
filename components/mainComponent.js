@@ -17,6 +17,7 @@ import ReportTextOutput from './ocrOutputComponent';
 import DoctorHome from './doctorHomeComponent';
 import ReportShow from './reportShow';
 import ChooseDoctor from './chooseDoctorComponent';
+import Exclamation from './exclamationComponent';
 const Stack  = createStackNavigator(); 
 const Drawer = createDrawerNavigator();
 
@@ -31,9 +32,10 @@ const PatientHomeNavigator = ({ navigation }) => {
             <Stack.Screen name="ReportTextOutput" component={ReportTextOutput}  />
             <Stack.Screen name="ReportShow" component={ReportShow}  />
             <Stack.Screen name="ChooseDoctor" component={ChooseDoctor}  />
+            <Stack.Screen name="Exclamation" component={Exclamation}  />
         </Stack.Navigator>
     );
-
+    
 }
 const DoctortHomeNavigator = ({ navigation }) => {
     return(

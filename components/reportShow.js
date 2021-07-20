@@ -6,12 +6,13 @@ import {DrawerActions } from '@react-navigation/native';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
 import { Loading } from './watingComponent';
 import {postReports} from '../redux/reports';
+import Hyperlink from 'react-native-hyperlink';
 function ReportShow (props){
 
     const report = props.route.params.report;
     const userName = useSelector(state => state.user.firstname)
     console.log("reportShow report",report);
-    var tableHead = ['Measurement', 'Value','Units'];
+    var tableHead = ['Measurement', 'Value','Units',''];
     var tableData = [
       ['RBC', 0, '10^6/ul',''],
       ['HGB', 0, 'g/dl',''],
@@ -42,6 +43,12 @@ function ReportShow (props){
       />
       )
 
+    const exclamation = (Measurement,index) => (
+            <Icon style={{margin:0}} name="exclamation-circle" type='font-awesome' 
+                size={30} color= 'yellow'
+                onPress={()=>props.navigation.navigate('Exclamation')}
+                />
+    )
         return(
             <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
                 <StatusBar backgroundColor='#55A8D9'/>
@@ -65,15 +72,10 @@ function ReportShow (props){
                                         cellIndex !=3?
                                         <Cell  key={cellIndex} data={cellIndex === 1 ? element(rowData[0],index) : cellData} textStyle={styles.text}/>
                                         : 
-                                        <Tooltip  containerStyle={{margin:0,padding:0}} popover={<Text>Info here</Text>}>
-                                        <Icon style={{margin:10}} name="exclamation-circle" type='font-awesome' 
-                                            size={30} color= 'yellow'/>
-                                    </Tooltip>
+                                        <Cell key={cellIndex} data={ exclamation(rowData[0],index)} textStyle={styles.text} />
+
                                     ))
                                     }
-                                   
-                                    
-                                   
                                 </TableWrapper>
                                 ))
                             }
@@ -122,7 +124,9 @@ function ReportShow (props){
                                 onPress={   ()=>   {  }}
 
                                 />
+                                
                         </View>
+                        
                     </ScrollView>
                 </View>
                 
