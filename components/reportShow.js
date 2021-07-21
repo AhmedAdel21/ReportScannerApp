@@ -12,26 +12,26 @@ function ReportShow (props){
     const report = props.route.params.report;
     const userName = useSelector(state => state.user.firstname)
     console.log("reportShow report",report);
-    var tableHead = ['Measurement', 'Value','Units',''];
+    var tableHead = ['Measure', 'Value','Range','Units'];
     var tableData = [
-      ['RBC', 0, '10^6/ul',''],
-      ['HGB', 0, 'g/dl',''],
-      ['НСТ', 0, '%',''],
-      ['MCV', 0, 'Um^3',''],
-      ['МСH', 0, 'pg',''],
-      ['MCHC', 0, 'g/dl',''],
-      ['RDW', 0, '%',''],
-      ['WBC', 0, '10^3/ul',''],
-      ['LYM', 0, '%',''],
-      ['LYMP', 0, '10^3/ul',''],
-      ['MON', 0, '%',''],
-      ['MONP', 0, '10^3/ul',''],
-      ['GRA', 0, '%',''],
-      ['GRAP', 0, '10^3/ul',''],
-      ['PLT', 0, '10^3/ul',''],
-      ['MPV', 0, 'Um^3',''],
-      ['PCT', 0, '%',''],
-      ['PDW', 0, '%','']
+      ['RBC', 0,'4.7 : 6', '10^6/ul',''],
+      ['HGB', 0,'13.5 : 18', 'g/dl',''],
+      ['НСТ', 0,'37 : 47', '%',''],
+      ['MCV', 0,'78 : 99', 'Um^3',''],
+      ['МСH', 0,'27 : 31 ', 'pg',''],
+      ['MCHC', 0,'32 : 36', 'g/dl',''],
+      ['RDW', 0,'11.5 : 14.5', '%',''],
+      ['WBC', 0,'4 : 10.5', '10^3/ul',''],
+      ['LYM', 0,'1.2 : 3.2', '%',''],
+      ['LYMP', 0,'20 : 45', '10^3/ul',''],
+      ['MON', 0,'0.3 : 0.8', '%',''],
+      ['MONP', 0,'1 : 8', '10^3/ul',''],
+      ['GRA', 0,'1.6 : 7.2', '%',''],
+      ['GRAP', 0,'52 : 76', '10^3/ul',''],
+      ['PLT', 0,'140 : 440', '10^3/ul',''],
+      ['MPV', 0,'7.4 : 10.4', 'Um^3',''],
+      ['PCT', 0,'0.1 : 0.5', '%',''],
+      ['PDW', 0,'9 : 14', '%','']
     ]
     
     const element = (Measurement,index) => (
@@ -46,7 +46,7 @@ function ReportShow (props){
     const exclamation = (Measurement,index) => (
             <Icon style={{margin:0}} name="exclamation-circle" type='font-awesome' 
                 size={30} color= 'yellow'
-                onPress={()=>props.navigation.navigate('Exclamation')}
+                onPress={()=>props.navigation.navigate('Exclamation',{index: index})}
                 />
     )
         return(
@@ -69,10 +69,10 @@ function ReportShow (props){
                                 <TableWrapper key={index} style={index%2? styles.row2 : styles.row1}>
                                     {
                                     rowData.map((cellData, cellIndex) => (
-                                        cellIndex !=3?
+                                        cellIndex !=4?
                                         <Cell  key={cellIndex} data={cellIndex === 1 ? element(rowData[0],index) : cellData} textStyle={styles.text}/>
                                         : 
-                                        <Cell key={cellIndex} data={ exclamation(rowData[0],index)} textStyle={styles.text} />
+                                        <Cell width={40} key={cellIndex} data={ exclamation(rowData[0],index)} textStyle={styles.text} />
 
                                     ))
                                     }
@@ -89,43 +89,7 @@ function ReportShow (props){
                             placeholder={report.comment}
                             />
                         </View>
-                        <View style={styles.buttomContainerStyle}>
-                            <Button 
-                                icon={
-                                    <Icon
-                                    type='font-awesome' name="times"
-                                    size={30}
-                                    color="white"
-                                    />
-                                }
-                                title=""
-                                buttonStyle={styles.ButtoncancelStyle}
-                                loading= {false}
-                                type="outline"
-                                containerStyle={{color:'black'}}
-                                titleStyle={{color:'black'}}
-                                onPress={   ()=>  props.navigation.navigate('PatientHome')   }
-
-                                />
-                                <Button 
-                                icon={
-                                    <Icon
-                                    type='font-awesome' name="check"
-                                    size={30}
-                                    color="white"
-                                    />
-                                }
-                                title=""
-                                buttonStyle={styles.ButtonUploadStyle}
-                                loading= {false}
-                                type="outline"
-                                containerStyle={{color:'black'}}
-                                titleStyle={{color:'black'}}
-                                onPress={   ()=>   {  }}
-
-                                />
-                                
-                        </View>
+                        
                         
                     </ScrollView>
                 </View>
@@ -160,32 +124,8 @@ const styles = StyleSheet.create({
     text: { margin: 6 },
     row1: { flexDirection: 'row', backgroundColor: '#8BC0E0' },
     row2: { flexDirection: 'row', backgroundColor: '#A3CBE3' },
-    commentStyle:{flexDirection: 'row', backgroundColor: '#A3CBE3'},
-    buttomContainerStyle: {
-        flex:1,
-        backgroundColor:'#fff',
-        flexDirection: 'row',
-        alignSelf:'center',
-        paddingBottom:20,
-      },
-    ButtonUploadStyle:{
-        backgroundColor: '#38C829',
-        margin:10,
-        marginLeft:20,
-        borderRadius:50,
-        width:50,
-        borderColor:'black',
-        borderEndWidth:1,
-        },
-    ButtoncancelStyle:{
-            backgroundColor: '#EE3413',
-            margin:10,
-            marginRight:50,
-            borderRadius:20,
-            width:50,
-            borderColor:'white',
-            borderEndWidth:1,
-        },
+    commentStyle:{flexDirection: 'row', backgroundColor: '#A3CBE3',marginBottom:30},
+    
   });
 
 export default ReportShow;

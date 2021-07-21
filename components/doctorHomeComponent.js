@@ -7,7 +7,6 @@ import * as Animatable from 'react-native-animatable';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {getReports,deletReports} from '../redux/reports';
 
-
 const RenderItems = (props) => {
   const data = props.item.report;
   const index = props.index;

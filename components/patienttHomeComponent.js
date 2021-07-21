@@ -6,7 +6,7 @@ import {DrawerActions } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {deletReports} from '../redux/user';
-
+import Bar from './BarComponent';
 const RenderItems = (props) => {
     const item = props.item;
     const index = props.index;
@@ -83,15 +83,7 @@ function PatientHome ({navigation}){
     }
     return(
         <View style={{flex: 1}}>
-            <View style={{backgroundColor:'#55A8D9'}}>
-                <StatusBar backgroundColor='#55A8D9'/>
-                <View style={styles.WelcomBar}>
-                    <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) }/>
-                    <Text style={styles.WelcomBarText}>
-                        welcome {user.firstname}
-                    </Text>
-                </View>
-            </View>
+            <Bar navigation={navigation}/>
             <View style={{flex:2}}>
                 <FlatList
                     data={userReports}

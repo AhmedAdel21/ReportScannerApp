@@ -18,6 +18,9 @@ import DoctorHome from './doctorHomeComponent';
 import ReportShow from './reportShow';
 import ChooseDoctor from './chooseDoctorComponent';
 import Exclamation from './exclamationComponent';
+import Contact from './ContactComponent';
+import About from './AboutComponent';
+import doctorProfile from './doctorProfileComponent';
 const Stack  = createStackNavigator(); 
 const Drawer = createDrawerNavigator();
 
@@ -33,6 +36,7 @@ const PatientHomeNavigator = ({ navigation }) => {
             <Stack.Screen name="ReportShow" component={ReportShow}  />
             <Stack.Screen name="ChooseDoctor" component={ChooseDoctor}  />
             <Stack.Screen name="Exclamation" component={Exclamation}  />
+            <Stack.Screen name="doctorProfile" component={doctorProfile}  />
         </Stack.Navigator>
     );
     
@@ -42,11 +46,26 @@ const DoctortHomeNavigator = ({ navigation }) => {
         <Stack.Navigator initialRouteName="DoctorHome" screenOptions={{headerShown: false}} >
             <Stack.Screen name="DoctorHome" component={DoctorHome}  />
             <Stack.Screen name="ReportShow" component={ReportShow}  />
+            <Stack.Screen name="Exclamation" component={Exclamation}  />
         </Stack.Navigator>
     );
 
 }
 
+const ContactNavigator = () => {
+    return(
+        <Stack.Navigator screenOptions={{headerShown: false}} >
+            <Stack.Screen name="Contact" component={Contact} options=  {({ navigation }) => ({ headerLeft:() => <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.toggleDrawer() }/>, title:'Contact Us'}) }  />
+        </Stack.Navigator>
+    );
+} 
+const AboutNavigator = () => {
+    return(
+        <Stack.Navigator screenOptions={{headerShown: false}} >
+            <Stack.Screen name="About" component={About} options= {({ navigation }) => ({ headerLeft:() => <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.toggleDrawer() }/>, title:'About US'}) } />
+        </Stack.Navigator>
+    );
+}
 
 export default function Main (){
     const isLoggedIn  = useSelector(state => state.user.logedin)
@@ -71,7 +90,9 @@ export default function Main (){
             return(
                 <NavigationContainer>
                     <Drawer.Navigator initialRouteName="PatientHome" drawerStyle={{backgroundColor: '#55A8D9'}} drawerContent={(props) => CustomDrawerContentComponent (props)} >
-                        <Drawer.Screen name='PatientHome' component={PatientHomeNavigator}  options={{drawerIcon:({ tintColor }) => (<Icon name='list' type='font-awesome' size={24} color={tintColor}/>) ,title: "Menu"}}/>
+                        <Drawer.Screen name='PatientHome' component={PatientHomeNavigator}  options={{drawerIcon:({ tintColor }) => (<Icon name='list' color= 'white' type='font-awesome' size={24} />) ,title: "Home"}}/>
+                        <Drawer.Screen name="ContactNavigator" component={ContactNavigator} options={{drawerIcon:({ tintColor }) => (<Icon name='address-card' color= 'white' type='font-awesome' size={22} />) ,title: "Contact Us"}} />
+                        <Drawer.Screen name="AboutNavigator" component={AboutNavigator} options={{drawerIcon:({ tintColor }) => (<Icon name='info-circle' color= 'white'  type='font-awesome' size={24}/>) ,title: "About Us"}} />
                     </Drawer.Navigator>
                 </NavigationContainer>
             );
@@ -81,7 +102,9 @@ export default function Main (){
         return(
             <NavigationContainer>
                 <Drawer.Navigator initialRouteName="DoctorHome" drawerStyle={{backgroundColor: '#55A8D9'}} drawerContent={(props) => CustomDrawerContentComponent (props)} >
-                    <Drawer.Screen name='DoctorHome' component={DoctortHomeNavigator}  options={{drawerIcon:({ tintColor }) => (<Icon name='list' type='font-awesome' size={24} color={tintColor}/>) ,title: "Menu"}}/>
+                    <Drawer.Screen name='DoctorHome' component={DoctortHomeNavigator}  options={{drawerIcon:({ tintColor }) => (<Icon name='list' color= 'white' type='font-awesome' size={24} color={tintColor}/>) ,title: "Home"}}/>
+                    <Drawer.Screen name="ContactNavigator" component={ContactNavigator} options={{drawerIcon:({ tintColor }) => (<Icon name='address-card' color= 'white' type='font-awesome' size={22} color={tintColor}/>) ,title: "Contact Us"}} />
+                    <Drawer.Screen name="AboutNavigator" component={AboutNavigator} options={{drawerIcon:({ tintColor }) => (<Icon name='info-circle' color= 'white' type='font-awesome' size={24} color={tintColor}/>) ,title: "About Us"}} />
                 </Drawer.Navigator>
             </NavigationContainer>
         );

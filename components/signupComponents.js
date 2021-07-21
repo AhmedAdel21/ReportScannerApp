@@ -1,15 +1,15 @@
 import React, { version,useState } from 'react';
-import { Text, ScrollView, View, Image ,StyleSheet, StatusBar,Platform,TouchableOpacity } from 'react-native';
+import { Text, ScrollView, View, Image ,StyleSheet, StatusBar,Alert,TouchableOpacity } from 'react-native';
 import { Card, Input, Icon ,SocialIcon,Button,CheckBox   } from 'react-native-elements';
 import { useSelector,useDispatch } from 'react-redux';
 import {singup} from '../redux/user';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
-
+import { Loading } from './watingComponent';
 const user = ['','','','','','']
 export default function Signup (props){
-    const { navigate } = props.navigation;
-    
+
+    const userState = useSelector(state => state.user)
     const inputRef = React.createRef();
     
 
@@ -23,7 +23,7 @@ export default function Signup (props){
     const dispatch = useDispatch();
     const [speciality , SetSpeciality] = useState('');
 
-    const itemsNumber = ["Dola","Dr Dola","Eng,Dola"]
+    const itemsNumber = ["Pulmonologists","Gastroenterologists","Endocrinologists","Nephrologists","Otolaryngologists"]
     
     const pickerItems = itemsNumber.map((value,index) => 
     <Picker.Item label={value.toString()} value={value.toString()} key={index.toString()+1} />   )     
@@ -62,6 +62,40 @@ export default function Signup (props){
         dispatch(singup(newUser))
         /*inputRef.current.clear();*/
     }
+    const ShowAlert = () =>{
+        return(
+            <View>{
+        Alert.alert(
+            'Sgin Up',
+            'You are successfully Singed up ...',
+            [
+              
+              { text: "OK", onPress: () => {props.navigation.navigate('Login'); } }
+            ],
+            { cancelable: false }
+          )}</View>);
+    }
+    if(userState.status == 'succeeded sigin up'){
+        return(
+        <ShowAlert/>
+        );
+    }else if(userState.errMess){
+        return(
+            <View>
+            <ScrollView style={{ backgroundColor:'#fff'}}> 
+            <Text  style={{margin:10,fontWeight:'bold'}}>Failed to Sign Up</Text>
+            <View style={{fontSize: 18,paddingLeft:10,paddingRight:10,marginTop:20}}>
+            <Text >Please Try again{"\n"}</Text>
+
+            </View>
+            </ScrollView>  
+            </View>   
+    );}else if(userState.status == 'pending sgetReports') {
+        return(
+            <Loading />
+        );
+    }
+    else{
     return(
         <ScrollView style={{flex: 1, backgroundColor:'#55A8D9'}}>
             <StatusBar backgroundColor='#55A8D9'/>
@@ -216,7 +250,7 @@ export default function Signup (props){
 
             </View>
         </ScrollView>
-    );
+    );}
 
 }
 

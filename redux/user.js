@@ -93,9 +93,7 @@ export const deletReports = createAsyncThunk('redux/deletReports',async (reportI
     method: "DELETE",
     headers: { 'Content-Type': 'application/json' },
   })
-  const res = await response.json();
-  console.log("res",res);
-  console.log(res);
+  const res = await response.json();;
   return res; 
 
 })
@@ -229,12 +227,12 @@ export const userSlice = createSlice({
         state.status = 'loading'
       },
       [singup.fulfilled]: (state, action) => {
-        state.status = 'succeeded'
+        state.status = 'succeeded sigin up'
         console.log('succeeded sigin up')
         
       },
       [singup.rejected]: (state, action) => {
-        state.status = 'failed'
+        state.status = 'failed sigin up'
         console.log('failed sigin up')
         state.errMess = action.error.message
       },

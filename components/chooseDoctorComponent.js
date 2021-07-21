@@ -29,7 +29,7 @@ const RenderItems = (props) => {
     const leftSwipe = () => {
         return (
           <>
-            <TouchableOpacity activeOpacity={0.6} onPress={showAlert} >
+            <TouchableOpacity activeOpacity={0.6} onPress={() => props.navigation.navigate('doctorProfile',{ doctorData: item })} >
             <View style={styles.shareBox}>
               <Animated.Text style={{color:'white',}}>
                 profile
@@ -47,7 +47,10 @@ const RenderItems = (props) => {
                 <Animatable.View animation="zoomIn" duration={500}>
                     <TouchableOpacity activeOpacity={0.6} onPress={showAlert} > 
                         <ListItem bottomDivider>
-                            <Avatar source={require('./images/LogoSmall.png')} />
+                        <Avatar
+                            rounded
+                            icon={{name: 'user-md', type: 'font-awesome',color:'black',size:35}}
+                            />
                             <ListItem.Content>
                                 <ListItem.Title> {"Doctor: " + item.firstname +  " " + item.lastname }</ListItem.Title>
                                 <ListItem.Subtitle>{item.speciality}</ListItem.Subtitle>
@@ -112,16 +115,7 @@ function ChooseDoctor (props){
                     renderItem={renderReportItem}
                 />
             </View>
-            <View style={styles.cameraIcon}>
-                <Icon name="camera" size={40} color= 'black'
-                    type='font-awesome'
-                    onPress={ () => navigation.navigate('Camera') }/>
-            </View>
-            <View style={styles.textIcon}>
-                <Icon name="pencil" size={40} color= 'black'
-                    type='font-awesome'
-                    onPress={ () => navigation.navigate('ReportTextInput') }/>
-            </View>
+
 
             
         </View>
