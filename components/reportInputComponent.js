@@ -5,14 +5,16 @@ import { useSelector,useDispatch } from 'react-redux';
 import {DrawerActions } from '@react-navigation/native';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
 import {getReports,postReports} from '../redux/user';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import {Picker} from '@react-native-picker/picker';
 
 var dataInserted = [
     ['RBC', ''],
     ['HGB', ''],
-    ['HCT', ''],
+    ['НСТ', ''],
     ['MCV', ''],
     ['MCH', ''],
-    ['MCHC',''],
+    ['МСНC',''],
     ['RDW', ''],
     ['WBC', ''],
     ['LYM', ''],
@@ -26,37 +28,43 @@ var dataInserted = [
     ['PCT', ''],
     ['PDW', ''],
     ['comment',''],
-    ['name','']
+    ['name',''],
+    ['age','']
 ]
 
 function ReportTextInput ({navigation}){
    
     const user = useSelector(state => state.user)
     var patientId = user.id;
-    const dola = []
+    const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+    const [date, SetDate] = useState( new Date());
     const dispatch = useDispatch()
-    var tableHead = ['Measurement', 'Value','Units'];
+    var tableHead = ['Measure', 'Value','Ranges','Units'];
     var tableData = [
-      ['RBC', 0, '10^6/ul'],
-      ['HGB', 0, 'g/dl'],
-      ['HCT', 0, '%'],
-      ['MCV', 0, 'Um^3'],
-      ['MCH', 0, 'pg'],
-      ['MCHC', 0, 'g/dl'],
-      ['RDW', 0, '%'],
-      ['WBC', 0, '10^3/ul'],
-      ['LYM', 0, '%'],
-      ['LYMP', 0, '10^3/ul'],
-      ['MON', 0, '%'],
-      ['MONP', 0, '10^3/ul'],
-      ['GRA', 0, '%'],
-      ['GRAP', 0, '10^3/ul'],
-      ['PLT', 0, '10^3/ul'],
-      ['MPV', 0, 'Um^3'],
-      ['PCT', 0, '%'],
-      ['PDW', 0, '%'],
+        ['RBC', 0,'4.7 : 6', '10^6/ul' ],
+        ['HGB', 0,'13.5 : 18', 'g/dl' ],
+        ['НСТ', 0,'37 : 47', '%' ],
+        ['MCV', 0,'78 : 99', 'Um^3' ],
+        ['MCH', 0,'27 : 31 ', 'pg' ],
+        ['МСНС', 0,'32 : 36', 'g/dl' ],
+        ['RDW', 0,'11.5 : 14.5', '%' ],
+        ['WBC', 0,'4 : 10.5', '10^3/ul' ],
+        ['LYM', 0,'1.2 : 3.2', '%' ],
+        ['LYMP', 0,'20 : 45', '10^3/ul' ],
+        ['MON', 0,'0.3 : 0.8', '%' ],
+        ['MONP', 0,'1 : 8', '10^3/ul' ],
+        ['GRA', 0,'1.6 : 7.2', '%' ],
+        ['GRAP', 0,'52 : 76', '10^3/ul' ],
+        ['PLT', 0,'140 : 440', '10^3/ul' ],
+        ['MPV', 0,'7.4 : 10.4', 'Um^3' ],
+        ['PCT', 0,'0.1 : 0.5', '%' ],
+        ['PDW', 0,'9 : 14', '%' ]
     ]
-    
+    const itemsNumber = ["Male","Female"]
+    const [gender , setGender] = useState('');
+    const pickerItems = itemsNumber.map((value,index) => 
+    <Picker.Item label={value.toString()} value={value.toString()} key={index.toString()+1} />   ) 
+
     const element = (index) => (
         <TextInput
         style={{alignSelf:'center'}}
@@ -80,12 +88,14 @@ function ReportTextInput ({navigation}){
     }
     const uploadData =() =>{
         var sendingData = {};
+        console.log("data Inserted", dataInserted);
         dataInserted.forEach((item) => {
             sendingData[item[0]]=item[1];
         })
         sendingData["patientId"] = patientId;
-        sendingData["date"] = new Date().toISOString();
-        console.log('data',sendingData);
+        sendingData["appDate"] = new Date().toISOString();
+        sendingData["reportDate"] = date;
+        sendingData["gender"] = gender;
         dispatch(postReports(sendingData));
         dispatch(getReports());
         navigation.navigate('PatientHome');
@@ -101,11 +111,46 @@ function ReportTextInput ({navigation}){
                 >
                     <View style={styles.centeredView} opacity={0.9} >
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Report's Name</Text>
+                        <Text style={styles.modalText}>Additional information</Text>
                         <TextInput
                             style={styles.modelInput}
                             onChangeText={(value) => setItemValue(value,19)}
                             placeholder="Name ..."
+                        />
+                        <TouchableOpacity
+                        style={styles.DateTimePickerButton}
+                        onPress={()=>setShowDateTimePicker(true)}
+                            >
+                        <Text style={{fontSize:17}}>Report Date : {date.toLocaleDateString()}</Text>
+                        </TouchableOpacity>
+                        {showDateTimePicker && (
+                                <DateTimePicker
+                                testID="dateTimePicker"
+                                value={date}
+                                mode='date'
+                                is24Hour={false}
+                                display="spinner"
+                                onChange={(event, selectedDate) =>{SetDate(selectedDate || date);setShowDateTimePicker(false)}}
+                                />
+                        )}
+                        
+                        <View style={styles.pickerContianer}>
+                            <Text style={{fontSize:18}}>Gender</Text>
+                            <Picker
+                                selectedValue={gender}
+                                style={styles.picker}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    setGender(itemValue)
+                                }>
+                                <Picker.Item label='***' value='0' key='0' />
+                                {pickerItems}
+                            </Picker>
+                        </View>
+                        <TextInput
+                            style={styles.modelInput}
+                            onChangeText={(value) => setItemValue(value,20)}
+                            placeholder="Age ..."
+                            keyboardType="numeric"
                         />
                         <View style={styles.modalButtons}>
                             <Pressable
@@ -121,6 +166,7 @@ function ReportTextInput ({navigation}){
                             <Text style={styles.textStyle}>OK</Text>
                             </Pressable>
                         </View>
+                        
                     </View>
                     </View>
                 </Modal>
@@ -128,7 +174,7 @@ function ReportTextInput ({navigation}){
                 <View style={styles.WelcomBar}>
                     <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) }/>
                     <Text style={styles.WelcomBarText}>
-                        welcome {user.surname}
+                        Report Input
                     </Text>
                 </View>
 
@@ -309,7 +355,32 @@ const styles = StyleSheet.create({
               width:130,
               borderRadius:10,
               marginBottom:10
-          }
+          },
+          DateTimePickerButton:{
+            alignItems: "center",
+            borderColor:'#55A8D9',
+            borderWidth:1,
+            borderRadius:20,
+            marginBottom:10,
+            padding:10,
+            fontSize:18,
+            borderRadius: 20,
+            
+        },
+        pickerContianer:{
+            flexDirection:'row',
+            alignItems: "center",
+            borderWidth:1,
+            borderRadius:20,
+            borderColor:'#55A8D9',
+            marginBottom:15,
+            marginLeft:5,
+            paddingLeft:10,
+        },
+        picker:{
+            paddingLeft:140,
+            marginLeft:30,
+        },
   });
 
 export default ReportTextInput;

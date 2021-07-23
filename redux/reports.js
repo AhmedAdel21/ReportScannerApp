@@ -17,27 +17,27 @@ export const postReports = createAsyncThunk('redux/postreports',async (report) =
 })
 
 export const getReports = createAsyncThunk('redux/getReports',async (doctorReports) => {
-  console.log("response");
+  //console.log("response");
   const response = await fetch (baseUrl + 'report/doctorReports',{
     method: "POST",
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(doctorReports),
   })
   const res = await response.json();
-  console.log("get reporot responde",res);
+  // console.log("get reporot responde",res);
   return res;
 
 })
 
 export const deletReports = createAsyncThunk('redux/deletReports',async (reportId) => {
-  console.log("report id",reportId)
+  //console.log("report id",reportId)
   const response = await fetch (baseUrl + 'report/doctorReports/'+reportId ,{
     method: "DELETE",
     headers: { 'Content-Type': 'application/json' },
   })
   const res = await response.json();
-  console.log("deletReports response",res);
-  console.log(res);
+  //console.log("deletReports response",res);
+  //console.log(res);
   return res; 
 
 })
@@ -57,7 +57,7 @@ export const reportSlice = createSlice({
       [postReports.fulfilled]: (state, action) => {
         state.status = 'succeeded';
         console.log('succeeded in postReports');
-        console.log("res:  ",action.payload);
+        //console.log("res:  ",action.payload);
         // setTimeout(() => {
         //   useDispatch(ADD_REPORTS(action.payload))
         // }, 2000);
@@ -94,7 +94,7 @@ export const reportSlice = createSlice({
         // for(let{ report} of state.reports){
           
         // }
-        console.log("action payload", action.payload);
+        //console.log("action payload", action.payload);
         // console.log("doctor reports",state.reports);
         // console.log("delet report",  );
 

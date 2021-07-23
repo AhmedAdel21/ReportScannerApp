@@ -21,7 +21,7 @@ export const photoUpload = createAsyncThunk('redux/photoUpload',async (photos) =
       formData.append('fileData', photoArray[photo]);
     }
     //console.log("formData",formData);
-    console.log("photo: ",photoArray)
+    //console.log("photo: ",photoArray)
   const response = await fetch (baseUrl + 'image/upload', {
                               method: "POST",
                               headers: { 'Content-Type': 'multipart/form-data' },
@@ -29,7 +29,7 @@ export const photoUpload = createAsyncThunk('redux/photoUpload',async (photos) =
                             })
 
   const res = await response.json();
-  console.log("res: ",res)
+  //console.log("res: ",res)
   return res;
 
 })
@@ -37,7 +37,7 @@ export const photoUpload = createAsyncThunk('redux/photoUpload',async (photos) =
 export const photoDownload = createAsyncThunk('redux/photoDownload',async () => {
   const response = await fetch (baseUrl + 'image/download')
   const res = await response.json();
-  console.log("res: ",res)
+  //console.log("res: ",res)
   return res;
 
 })
@@ -46,7 +46,11 @@ export const imageSlice = createSlice({
     name: 'image',
     initialState: {errMess: null,report:'',images:[],status: 'idle'},
     reducers: {
-        ADD_IMAGE: (state, action) => {state.dishes = action.payload}
+        ADD_IMAGE: (state, action) => {state.images = action.payload},
+        CHANGE_MEASURE: (state,action) => {state.report.measurments[action.payload.Measurement] = action.payload.value;
+          
+          console.log(state.report.measurments[action.payload.Measurement] + ': '+action.payload.value);
+        console.log("state.report.measurments",state.report.measurments);}
     },
     extraReducers: {
       [photoUpload.pending]: (state, action) => {
@@ -57,6 +61,7 @@ export const imageSlice = createSlice({
         state.status = 'succeeded Upload'
         console.log('succeeded Upload')
         state.report = action.payload
+        console.log("Payload",action.payload.measurments);
       },
       [photoUpload.rejected]: (state, action) => {
         state.status = 'failed'
@@ -75,12 +80,12 @@ export const imageSlice = createSlice({
       },
       [photoDownload.rejected]: (state, action) => {
         state.status = 'failed'
-        console.log('failed dishes')
+        console.log('failed photoDownload')
         state.errMess = action.error.message
       },
     }
 })
 
-export const { ADD_IMAGE} = imageSlice.actions;
+export const { ADD_IMAGE,CHANGE_MEASURE} = imageSlice.actions;
 export default imageSlice.reducer;
 

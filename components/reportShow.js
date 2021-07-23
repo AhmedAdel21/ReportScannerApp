@@ -18,7 +18,7 @@ function ReportShow (props){
       ['HGB', 0,'13.5 : 18', 'g/dl',''],
       ['НСТ', 0,'37 : 47', '%',''],
       ['MCV', 0,'78 : 99', 'Um^3',''],
-      ['МСH', 0,'27 : 31 ', 'pg',''],
+      ['MCH', 0,'27 : 31 ', 'pg',''],
       ['MCHC', 0,'32 : 36', 'g/dl',''],
       ['RDW', 0,'11.5 : 14.5', '%',''],
       ['WBC', 0,'4 : 10.5', '10^3/ul',''],
@@ -33,7 +33,7 @@ function ReportShow (props){
       ['PCT', 0,'0.1 : 0.5', '%',''],
       ['PDW', 0,'9 : 14', '%','']
     ]
-    
+    var reportDate = new Date(report.reportDate);
     const element = (Measurement,index) => (
         <TextInput
         style={{alignSelf:'center'}}
@@ -55,7 +55,7 @@ function ReportShow (props){
                 <View style={styles.WelcomBar}>
                     <Icon name="menu" size={30} color= 'white' onPress={ () => props.navigation.dispatch(DrawerActions.toggleDrawer()) }/>
                     <Text style={styles.WelcomBarText}>
-                        welcome {userName}
+                        {report.name} Report
                     </Text>
                 </View>                
                 <View style={styles.container}>
@@ -82,15 +82,46 @@ function ReportShow (props){
                         </Table>
                         <View style={styles.commentStyle}>
                             <Text> comment</Text>
-                            <TextInput
-                            //style={styles.input}
-                            onChangeText={text => setComment(text)}
-                            //value={comment}
-                            placeholder={report.comment}
-                            />
+                            <Text style={{margin:10}}>{report.comment}</Text>
+                            
                         </View>
-                        
-                        
+                        <View style={{flexDirection:'row'}}>
+                        <View style={styles.modelInput}>
+                                <Text style={{fontWeight:'bold',fontSize:18}}>Name: </Text>
+                                <TextInput  
+                                    style={{color:'black',fontSize:18}}                         
+                                    value={report.name == null ? "***":report.name.toString() }
+                                    editable={false}
+                                />
+                            </View>
+                            <View style={styles.modelInput}>
+                                <Text style={{fontWeight:'bold',fontSize:18}}>Date: </Text>
+                                <TextInput  
+                                    style={{color:'black',fontSize:18}}                         
+                                    value={report.reportDate == null ? "***":reportDate.toLocaleDateString() }
+                                    editable={false}
+                                />
+                            </View>
+                            
+                        </View>
+                        <View style={{flexDirection:'row',marginBottom:30}}>
+                            <View style={styles.modelInput}>
+                                <Text style={{fontWeight:'bold',fontSize:18}}>Gender: </Text>
+                                <TextInput  
+                                    style={{color:'black',fontSize:18}}                         
+                                    value={report.gender == null ? "***":report.gender.toString() }
+                                    editable={false}
+                                />
+                            </View>
+                            <View style={styles.modelInput}>
+                                <Text style={{fontWeight:'bold',fontSize:18}}>Age: </Text>
+                                <TextInput  
+                                    style={{color:'black',fontSize:18}}                         
+                                    value={report.age == null ? "***":report.age.toString() }
+                                    editable={false}
+                                />
+                            </View>
+                        </View>
                     </ScrollView>
                 </View>
                 
@@ -124,7 +155,19 @@ const styles = StyleSheet.create({
     text: { margin: 6 },
     row1: { flexDirection: 'row', backgroundColor: '#8BC0E0' },
     row2: { flexDirection: 'row', backgroundColor: '#A3CBE3' },
-    commentStyle:{flexDirection: 'row', backgroundColor: '#A3CBE3',marginBottom:30},
+    commentStyle:{flexDirection:'column', backgroundColor: '#A3CBE3'},
+    modelInput:{
+        flexDirection:'row',
+        borderColor:'#55A8D9',
+        borderWidth:1,
+        fontSize:20,
+        paddingLeft:5,
+        width:170,
+        borderRadius:10,
+        marginBottom:10,
+        marginRight:20,
+    },
+    
     
   });
 

@@ -47,7 +47,7 @@ const RenderItems = (props) => {
         );
       };
 
-    var date = new Date(item.date);
+    var date = new Date(item.appDate);
     return(
             <Swipeable renderRightActions={leftSwipe} >
                 <Animatable.View animation="zoomIn" duration={500}>

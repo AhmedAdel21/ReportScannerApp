@@ -104,7 +104,7 @@ function ChooseDoctor (props){
                 <View style={styles.WelcomBar}>
                     <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) }/>
                     <Text style={styles.WelcomBarText}>
-                        welcome {user.firstname}
+                        Doctors
                     </Text>
                 </View>
             </View>

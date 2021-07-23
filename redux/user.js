@@ -35,7 +35,7 @@ export const signin = createAsyncThunk('redux/signin',async (loginData) => {
 
 export const singup = createAsyncThunk('redux/singup',async (newUser) => {
   
-  console.log(newUser)
+  //console.log(newUser)
   var res =''
   if (newUser.type == 'patient' ) {
     const response = await fetch (baseUrl + 'users/signup/patient',{
@@ -88,7 +88,7 @@ return res;
 })
 
 export const deletReports = createAsyncThunk('redux/deletReports',async (reportId) => {
-  console.log("report id",reportId)
+  //console.log("report id",reportId)
   const response = await fetch (baseUrl + 'report/'+reportId ,{
     method: "DELETE",
     headers: { 'Content-Type': 'application/json' },
@@ -203,7 +203,7 @@ export const userSlice = createSlice({
       [signin.fulfilled]: (state, action) => {
         state.status = 'succeeded';
         // console.log('succeeded sidsgdsfasfasfgin in');
-        console.log("action.payload",action.payload);
+        //console.log("action.payload",action.payload);
         state.firstname=action.payload.firstname;
         state.lastname =action.payload.lastname;
         state.phone=action.payload.username;
@@ -243,7 +243,7 @@ export const userSlice = createSlice({
       [getReports.fulfilled]: (state, action) => {
         state.status = 'succeeded';
         console.log('succeeded in getReports');
-        console.log(action.payload);
+        //console.log(action.payload);
         state.reports = action.payload;
       },
       [getReports.rejected]: (state, action) => {

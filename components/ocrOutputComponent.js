@@ -1,4 +1,4 @@
-import {View, Text,StatusBar,StyleSheet,TouchableOpacity,TextInput,ScrollView } from 'react-native';
+import {View, Text,StatusBar,StyleSheet,Modal,TextInput,TouchableOpacity,ScrollView,Pressable } from 'react-native';
 import {Button,Icon} from 'react-native-elements';
 import React,{useState}  from 'react';
 import { useSelector,useDispatch } from 'react-redux';
@@ -6,66 +6,158 @@ import {DrawerActions } from '@react-navigation/native';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
 import { Loading } from './watingComponent';
 import {postReports} from '../redux/reports';
+import {CHANGE_MEASURE} from '../redux/images';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import {Picker} from '@react-native-picker/picker';
+
+
+
+// var dataInserted = {}
 function ReportTextOutput ({navigation}){
 
     const user = useSelector(state => state.user)
     var patientId = user.id;
     const image = useSelector(state => state.image)
-    console.log("id : ",patientId);
     const dispatch = useDispatch()
-    var [comment, setComment] = useState(image.report.comments);
-    var tableHead = ['Measurement', 'Value','Units'];
+    
+    var [name, setName] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+    const [date, SetDate] = useState( new Date());
+    const itemsNumber = ["Male","Female"]
+    const [gender , setGender] = useState('');
+    const [age , setAge] = useState('');
+    const pickerItems = itemsNumber.map((value,index) => 
+    <Picker.Item label={value.toString()} value={value.toString()} key={index.toString()+1} />   ) 
+
+
+    var tableHead = ['Measure', 'Value','Ranges','Units'];
     var tableData = [
-      ['RBC', 0, '10^6/ul'],
-      ['HGB', 0, 'g/dl'],
-      ['НСТ', 0, '%'],
-      ['MCV', 0, 'Um^3'],
-      ['МСH', 0, 'pg'],
-      ['MCHC', 0, 'g/dl'],
-      ['RDW', 0, '%'],
-      ['WBC', 0, '10^3/ul'],
-      ['LYM', 0, '%'],
-      ['LYMP', 0, '10^3/ul'],
-      ['MON', 0, '%'],
-      ['MONP', 0, '10^3/ul'],
-      ['GRA', 0, '%'],
-      ['GRAP', 0, '10^3/ul'],
-      ['PLT', 0, '10^3/ul'],
-      ['MPV', 0, 'Um^3'],
-      ['PCT', 0, '%'],
-      ['PDW', 0, '%']
+        ['RBC', 0,'4.7 : 6', '10^6/ul' ],
+        ['HGB', 0,'13.5 : 18', 'g/dl' ],
+        ['НСТ', 0,'37 : 47', '%' ],
+        ['MCV', 0,'78 : 99', 'Um^3' ],
+        ['MCH', 0,'27 : 31 ', 'pg' ],
+        ['MCHC', 0,'32 : 36', 'g/dl' ],
+        ['RDW', 0,'11.5 : 14.5', '%' ],
+        ['WBC', 0,'4 : 10.5', '10^3/ul' ],
+        ['LYM', 0,'1.2 : 3.2', '%' ],
+        ['LYMP', 0,'20 : 45', '10^3/ul' ],
+        ['MON', 0,'0.3 : 0.8', '%' ],
+        ['MONP', 0,'1 : 8', '10^3/ul' ],
+        ['GRA', 0,'1.6 : 7.2', '%' ],
+        ['GRAP', 0,'52 : 76', '10^3/ul' ],
+        ['PLT', 0,'140 : 440', '10^3/ul' ],
+        ['MPV', 0,'7.4 : 10.4', 'Um^3' ],
+        ['PCT', 0,'0.1 : 0.5', '%' ],
+        ['PDW', 0,'9 : 14', '%' ]
     ]
     
-    var dataInserted = [];
+    
+
     const element = (Measurement,index) => (
         <TextInput
         style={{alignSelf:'center'}}
-        onChangeText={(value) => setItemValue(value,index)}
-        placeholder={image.report.measurments[Measurement.toString()]}
+        onChangeText={(value) => dispatch(CHANGE_MEASURE({value,Measurement}))}
+        placeholder={image.report.measurments[Measurement]}
         keyboardType="numeric"
       />
       )
-    const setItemValue = (value,index) => {
-        dataInserted[index][1] = value;
+    // const setItemValue = (value,Measurement) => {
+    //     dataInserted[Measurement] = value;
+    //     console.log('data',dataInserted)
+    // }
+    const sendData = (patientId)=>{
+        // var newReport = {...dataInserted}
+        // dataInserted.forEach((item) => {
+        //     newReport[item[0]]=item[1];
+        // })
+        // dataInserted["MCHC"] =dataInserted['MCHC'];
+        var dataInserted = {...image.report.measurments};
+        dataInserted["patientId"] = patientId;
+        dataInserted["comment"] = comment;
+        dataInserted["name"] = name;
+        dataInserted["appDate"] = new Date().toISOString();
+        dataInserted["reportDate"] = date;
+        dataInserted["gender"] = gender;
+        dataInserted["age"] = age;
+        console.log('repot post',dataInserted);
+        dispatch(postReports(dataInserted));
+        navigation.navigate('PatientHome');
     }
-    const sendData = (dataInserted,patientId)=>{
-        var newReport = {}
-        dataInserted.forEach((item) => {
-            newReport[item[0]]=item[1];
-        })
-        newReport["patientId"] = patientId;
-        newReport["comment"] = comment;
-        newReport["date"] = new Date().toISOString();
-        console.log(newReport);
-        dispatch(postReports(newReport));
-    }
-    
+    const [comment, setComment] = useState(image.report.comment);
+    // const [dataInserted,setDataInserted] = useState(image.report.measurments);
     if(image.status == 'succeeded Upload'){
-
         
-        dataInserted = Object.entries(image.report.measurments);
+        // console.log("dataInserted",dataInserted);
         return(
             <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {setModalVisible(!modalVisible);}}
+                >
+                    <View style={styles.centeredView} opacity={0.9} >
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Report's Name</Text>
+                        <TextInput
+                            style={styles.modelInput}
+                            onChangeText={(text)=> setName(text)}
+                            placeholder="Name ..."
+                        />
+                        <TouchableOpacity
+                        style={styles.DateTimePickerButton}
+                        onPress={()=>setShowDateTimePicker(true)}
+                            >
+                        <Text style={{fontSize:17}}>Report Date : {date.toLocaleDateString()}</Text>
+                        </TouchableOpacity>
+                        {showDateTimePicker && (
+                                <DateTimePicker
+                                testID="dateTimePicker"
+                                value={date}
+                                mode='date'
+                                is24Hour={false}
+                                display="spinner"
+                                onChange={(event, selectedDate) =>{SetDate(selectedDate || date);setShowDateTimePicker(false)}}
+                                />
+                        )}
+                        
+                        <View style={styles.pickerContianer}>
+                            <Text style={{fontSize:18}}>Gender</Text>
+                            <Picker
+                                selectedValue={gender}
+                                style={styles.picker}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    setGender(itemValue)
+                                }>
+                                <Picker.Item label='***' value='0' key='0' />
+                                {pickerItems}
+                            </Picker>
+                        </View>
+                        <TextInput
+                            style={styles.modelInput}
+                            onChangeText={(value) => setAge(value)}
+                            placeholder="Age ..."
+                            keyboardType="numeric"
+                        />
+                        <View style={styles.modalButtons}>
+                            <Pressable
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => setModalVisible(!modalVisible)}
+                            >
+                            <Text style={styles.textStyle}>close</Text>
+                            </Pressable>
+                            <Pressable
+                            style={[styles.button, styles.buttonOpen]}
+                            onPress={() => {setModalVisible(!modalVisible);sendData(patientId);}}
+                            >
+                            <Text style={styles.textStyle}>OK</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                    </View>
+                </Modal>
                 <StatusBar backgroundColor='#55A8D9'/>
                 <View style={styles.WelcomBar}>
                     <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) }/>
@@ -93,12 +185,14 @@ function ReportTextOutput ({navigation}){
                         </Table>
                         <View style={styles.commentStyle}>
                             <Text> comment</Text>
-                            <TextInput
-                            //style={styles.input}
-                            onChangeText={text => setComment(text)}
-                            //value={comment}
-                            placeholder={image.report.comments}
-                            />
+                            <View >
+                                <TextInput
+                                style={{alignContent:'center',borderColor:'white',borderWidth:1,marginBottom:5,marginRight:20}}
+                                onChangeText={text => setComment(text)}
+                                value={image.report.comment}
+                                // placeholder={}
+                                />
+                            </View>
                         </View>
                         <View style={styles.buttomContainerStyle}>
                             <Button 
@@ -132,7 +226,7 @@ function ReportTextOutput ({navigation}){
                                 type="outline"
                                 containerStyle={{color:'black'}}
                                 titleStyle={{color:'black'}}
-                                onPress={   ()=>   { sendData(dataInserted,patientId) }}
+                                onPress={   ()=>   { setModalVisible(true);  }}
 
                                 />
                         </View>
@@ -179,7 +273,7 @@ const styles = StyleSheet.create({
     text: { margin: 6 },
     row1: { flexDirection: 'row', backgroundColor: '#8BC0E0' },
     row2: { flexDirection: 'row', backgroundColor: '#A3CBE3' },
-    commentStyle:{flexDirection: 'row', backgroundColor: '#A3CBE3'},
+    commentStyle:{flexDirection:'column',backgroundColor: '#A3CBE3',padding:10},
     buttomContainerStyle: {
         flex:1,
         backgroundColor:'#fff',
@@ -204,6 +298,85 @@ const styles = StyleSheet.create({
             width:50,
             borderColor:'white',
             borderEndWidth:1,
+        },
+        centeredView: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 22
+          },
+          modalView: {
+            backgroundColor: "white",
+            borderRadius: 20,
+            padding: 35,
+            alignItems: "center",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5
+          },
+          modalButtons:{
+            flexDirection:'row',
+          },
+          button: {
+            borderRadius: 20,
+            width: 60,
+            padding: 10,
+            elevation: 2,
+            margin:10,
+            marginBottom: 0,
+          },
+          buttonOpen: {
+            backgroundColor: 'green',
+          },
+          buttonClose: {
+            backgroundColor: 'red',
+          },
+          textStyle: {
+            color: "white",
+            fontWeight: "bold",
+            textAlign: "center"
+          },
+          modalText: {
+            marginBottom: 15,
+            textAlign: "center"
+          },
+          modelInput:{
+              borderColor:'#55A8D9',
+              borderWidth:1,
+              padding:10,
+              width:130,
+              borderRadius:10,
+              marginBottom:10
+          },
+          DateTimePickerButton:{
+            alignItems: "center",
+            borderColor:'#55A8D9',
+            borderWidth:1,
+            borderRadius:20,
+            marginBottom:10,
+            padding:10,
+            fontSize:18,
+            borderRadius: 20,
+            
+        },
+          pickerContianer:{
+            flexDirection:'row',
+            alignItems: "center",
+            borderWidth:1,
+            borderRadius:20,
+            borderColor:'#55A8D9',
+            marginBottom:15,
+            marginLeft:5,
+            paddingLeft:10,
+        },
+        picker:{
+            paddingLeft:140,
+            marginLeft:30,
         },
   });
 

@@ -1,12 +1,20 @@
 
-import {View,ScrollView } from 'react-native';
+import {View,ScrollView,StyleSheet,StatusBar } from 'react-native';
 import {Icon,Text,Divider  } from 'react-native-elements';
 import React from 'react';
 import Hyperlink from 'react-native-hyperlink';
-import Bar from './BarComponent';
-const HGBexclamation = () =>{
+import {DrawerActions } from '@react-navigation/native';
+const HGBexclamation = ({navigation}) =>{
 
     return(
+        <View>
+            <StatusBar backgroundColor='#55A8D9'/>
+                <View style={styles.WelcomBar}>
+                    <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) }/>
+                    <Text style={styles.WelcomBarText}>
+                        HGB
+                    </Text>
+                </View>
         <ScrollView style={{ backgroundColor:'#fff'}}> 
             <Hyperlink
             linkDefault
@@ -409,13 +417,21 @@ const HGBexclamation = () =>{
             </View>
             </Hyperlink>
         </ScrollView> 
-        
+    </View>
 
     );
 }
-const RBCexclamation = () =>{
+const RBCexclamation = ({navigation}) =>{
 
     return(
+        <View>
+            <StatusBar backgroundColor='#55A8D9'/>
+                <View style={styles.WelcomBar}>
+                    <Icon name="menu" size={30} color= 'white' onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) }/>
+                    <Text style={styles.WelcomBarText}>
+                        RBC
+                    </Text>
+                </View>
             <ScrollView style={{ backgroundColor:'#fff'}}> 
                 <Hyperlink
                 linkDefault
@@ -490,6 +506,7 @@ const RBCexclamation = () =>{
                     </View>
                 </Hyperlink>
             </ScrollView> 
+            </View>
     )
 }
 const UnederPreparation = ()=> {
@@ -514,12 +531,29 @@ function Exclamation (props){
     const RenderingComponent = ExclamationArray[index];
     return(
         <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
-            <Bar />
-            <RenderingComponent />
+            
+            <RenderingComponent navigation={props.navigation} />
         </View>
     )
 }
 
-
+const styles = StyleSheet.create({
+    Image: {margin:20},
+    WelcomBar: {
+        // alignItems: 'center' ,
+        flexDirection: 'row',
+        backgroundColor:'#55A8D9' ,
+        marginTop:20,
+        marginLeft:10,
+        marginBottom:10
+        },
+    WelcomBarText: {
+        fontSize:20,
+        color:'white',
+        marginLeft:20,
+        fontWeight:'bold',
+        
+    },
+});
 
 export default Exclamation;

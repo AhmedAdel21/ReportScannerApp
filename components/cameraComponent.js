@@ -55,6 +55,7 @@ function Camera ({navigation}){
             ref={ref => cameraRef = ref }
             style={styles.preview}
             //flashMode={RNCamera.Constants.FlashMode.on}
+            ratio='16:9'
             type={RNCamera.Constants.Type.back}
             androidCameraPermissionOptions={{
                 title: 'Permission to use camera',
