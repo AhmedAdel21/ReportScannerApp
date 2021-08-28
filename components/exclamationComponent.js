@@ -540,7 +540,6 @@ function Exclamation (props){
 const styles = StyleSheet.create({
     Image: {margin:20},
     WelcomBar: {
-        // alignItems: 'center' ,
         flexDirection: 'row',
         backgroundColor:'#55A8D9' ,
         marginTop:20,

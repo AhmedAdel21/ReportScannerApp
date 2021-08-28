@@ -47,10 +47,11 @@ export const imageSlice = createSlice({
     initialState: {errMess: null,report:'',images:[],status: 'idle'},
     reducers: {
         ADD_IMAGE: (state, action) => {state.images = action.payload},
-        CHANGE_MEASURE: (state,action) => {state.report.measurments[action.payload.Measurement] = action.payload.value;
+        CHANGE_MEASURE: (state,action) => {state.report.measurments[action.payload.Measurement] = action.payload.value,
+        
           
-          console.log(state.report.measurments[action.payload.Measurement] + ': '+action.payload.value);
-        console.log("state.report.measurments",state.report.measurments);}
+          console.log(action.payload.Measurement + ': '+action.payload.value);},
+        CHANGE_COMMENT:(state,action) =>{(state.report.comment = action.payload);}
     },
     extraReducers: {
       [photoUpload.pending]: (state, action) => {
@@ -86,6 +87,6 @@ export const imageSlice = createSlice({
     }
 })
 
-export const { ADD_IMAGE,CHANGE_MEASURE} = imageSlice.actions;
+export const { ADD_IMAGE,CHANGE_MEASURE,CHANGE_COMMENT} = imageSlice.actions;
 export default imageSlice.reducer;
 

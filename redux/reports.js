@@ -4,8 +4,7 @@ import fetch from 'cross-fetch';
 import { useDispatch } from 'react-redux';
 import { State } from 'react-native-gesture-handler';
 export const postReports = createAsyncThunk('redux/postreports',async (report) => {
-    //console.log(report);
-  //console.log(newReport)
+
     const response = await fetch (baseUrl + 'report',{
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
@@ -17,31 +16,30 @@ export const postReports = createAsyncThunk('redux/postreports',async (report) =
 })
 
 export const getReports = createAsyncThunk('redux/getReports',async (doctorReports) => {
-  //console.log("response");
+  
   const response = await fetch (baseUrl + 'report/doctorReports',{
     method: "POST",
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(doctorReports),
   })
   const res = await response.json();
-  // console.log("get reporot responde",res);
+  
   return res;
 
 })
 
 export const deletReports = createAsyncThunk('redux/deletReports',async (reportId) => {
-  //console.log("report id",reportId)
+
   const response = await fetch (baseUrl + 'report/doctorReports/'+reportId ,{
     method: "DELETE",
     headers: { 'Content-Type': 'application/json' },
   })
   const res = await response.json();
-  //console.log("deletReports response",res);
-  //console.log(res);
+
   return res; 
 
 })
-// state.reports.find( (report) => report. === req.params.reportId)
+
 export const reportSlice = createSlice({
     name: 'report',
     initialState: {errMess: null,reports:[],status: 'idle'},
@@ -57,11 +55,7 @@ export const reportSlice = createSlice({
       [postReports.fulfilled]: (state, action) => {
         state.status = 'succeeded';
         console.log('succeeded in postReports');
-        //console.log("res:  ",action.payload);
-        // setTimeout(() => {
-        //   useDispatch(ADD_REPORTS(action.payload))
-        // }, 2000);
-        //console.log("action.payload",action.payload);
+
       },
       [postReports.rejected]: (state, action) => {
         state.status = 'failed'
@@ -76,8 +70,7 @@ export const reportSlice = createSlice({
         state.status = 'succeeded';
         console.log('succeeded in getReports');
         state.reports = action.payload;
-        //console.log(state.reports);
-        //console.log("action.payload",action.payload);
+
       },
       [getReports.rejected]: (state, action) => {
         state.status = 'failed';
@@ -91,16 +84,9 @@ export const reportSlice = createSlice({
       [deletReports.fulfilled]: (state, action) => {
         state.status = 'succeeded';
         console.log('succeeded in deletReports'); 
-        // for(let{ report} of state.reports){
-          
-        // }
-        //console.log("action payload", action.payload);
-        // console.log("doctor reports",state.reports);
-        // console.log("delet report",  );
 
         state.reports = state.reports.filter(  (report) =>  report.report._id != action.payload );
         
-        // console.log("report deleted",state.reports.map((report)=>{report.report.find((report) => report.reportId===action.payload)});
         
       },
       [deletReports.rejected]: (state, action) => {

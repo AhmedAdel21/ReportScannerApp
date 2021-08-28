@@ -27,15 +27,14 @@ export const signin = createAsyncThunk('redux/signin',async (loginData) => {
   }else{
     res = 'error in sign in';
   }
-  
-  //console.log("res:  ",res);
+
   return res;
 
 })
 
 export const singup = createAsyncThunk('redux/singup',async (newUser) => {
   
-  //console.log(newUser)
+
   var res =''
   if (newUser.type == 'patient' ) {
     const response = await fetch (baseUrl + 'users/signup/patient',{
@@ -58,8 +57,7 @@ export const singup = createAsyncThunk('redux/singup',async (newUser) => {
   }else{
     res = 'error in sign up';
   }
-  
-  //console.log(res)
+
   
   return res;
 
@@ -69,7 +67,7 @@ export const getReports = createAsyncThunk('redux/getReports',async () => {
   console.log("response");
   const response = await fetch (baseUrl + 'report')
   const res = await response.json();
-  //console.log("response",res);
+  
   return res;
 
 })
@@ -80,7 +78,7 @@ export const postReports = createAsyncThunk('redux/postreports',async (report) =
     method: "POST",
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(report),
-    //credentials: "same-origin"
+    
   })
   const res = await response.json();
 return res;
@@ -88,7 +86,7 @@ return res;
 })
 
 export const deletReports = createAsyncThunk('redux/deletReports',async (reportId) => {
-  //console.log("report id",reportId)
+  
   const response = await fetch (baseUrl + 'report/'+reportId ,{
     method: "DELETE",
     headers: { 'Content-Type': 'application/json' },
@@ -97,93 +95,7 @@ export const deletReports = createAsyncThunk('redux/deletReports',async (reportI
   return res; 
 
 })
-const dummyData = [
-  {
-    id:"0",
-    name:"dola",
-    subtitle:"dodldld"
-  },
-  {
-    id:"1",
-    name:"saddola",
-    subtitle:"dodlsacscasdcadld"
-  },
-  {
-    id:"2",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"3",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"4",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"5",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"6",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"7",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"8",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"9",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"10",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"11",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"12",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"13",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"14",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"15",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  },
-  {
-    id:"16",
-    name:"asddola",
-    subtitle:"dxcvodldld"
-  }
-]
+
 export const userSlice = createSlice({
     name: 'user',
     initialState: {errMess: null,id:'',reports:[],type:'idl',data:dummyData,firstname:'ahmed',lastname:'adel',phone:'',email:'',logedin:false,status: 'idle',speciality:'',gender:'',birthdate:''},
@@ -202,8 +114,7 @@ export const userSlice = createSlice({
       },
       [signin.fulfilled]: (state, action) => {
         state.status = 'succeeded';
-        // console.log('succeeded sidsgdsfasfasfgin in');
-        //console.log("action.payload",action.payload);
+
         state.firstname=action.payload.firstname;
         state.lastname =action.payload.lastname;
         state.phone=action.payload.username;
@@ -243,7 +154,7 @@ export const userSlice = createSlice({
       [getReports.fulfilled]: (state, action) => {
         state.status = 'succeeded';
         console.log('succeeded in getReports');
-        //console.log(action.payload);
+
         state.reports = action.payload;
       },
       [getReports.rejected]: (state, action) => {

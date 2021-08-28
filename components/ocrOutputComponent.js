@@ -12,7 +12,7 @@ import {Picker} from '@react-native-picker/picker';
 
 
 
-// var dataInserted = {}
+
 function ReportTextOutput ({navigation}){
 
     const user = useSelector(state => state.user)
@@ -63,19 +63,12 @@ function ReportTextOutput ({navigation}){
         keyboardType="numeric"
       />
       )
-    // const setItemValue = (value,Measurement) => {
-    //     dataInserted[Measurement] = value;
-    //     console.log('data',dataInserted)
-    // }
+
     const sendData = (patientId)=>{
-        // var newReport = {...dataInserted}
-        // dataInserted.forEach((item) => {
-        //     newReport[item[0]]=item[1];
-        // })
-        // dataInserted["MCHC"] =dataInserted['MCHC'];
+
         var dataInserted = {...image.report.measurments};
         dataInserted["patientId"] = patientId;
-        dataInserted["comment"] = comment;
+        dataInserted["comment"] = image.report.comment;
         dataInserted["name"] = name;
         dataInserted["appDate"] = new Date().toISOString();
         dataInserted["reportDate"] = date;
@@ -85,11 +78,9 @@ function ReportTextOutput ({navigation}){
         dispatch(postReports(dataInserted));
         navigation.navigate('PatientHome');
     }
-    const [comment, setComment] = useState(image.report.comment);
-    // const [dataInserted,setDataInserted] = useState(image.report.measurments);
     if(image.status == 'succeeded Upload'){
         
-        // console.log("dataInserted",dataInserted);
+
         return(
             <View style={{flex: 1, backgroundColor:'#55A8D9'}}>
                 <Modal
@@ -188,9 +179,9 @@ function ReportTextOutput ({navigation}){
                             <View >
                                 <TextInput
                                 style={{alignContent:'center',borderColor:'white',borderWidth:1,marginBottom:5,marginRight:20}}
-                                onChangeText={text => setComment(text)}
+                                onChangeText={text => dispatch(CHANGE_COMMENT(text))}
                                 value={image.report.comment}
-                                // placeholder={}
+                               
                                 />
                             </View>
                         </View>

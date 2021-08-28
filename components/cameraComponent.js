@@ -54,7 +54,6 @@ function Camera ({navigation}){
             <RNCamera
             ref={ref => cameraRef = ref }
             style={styles.preview}
-            //flashMode={RNCamera.Constants.FlashMode.on}
             ratio='16:9'
             type={RNCamera.Constants.Type.back}
             androidCameraPermissionOptions={{
@@ -112,7 +111,6 @@ function Camera ({navigation}){
 const styles = StyleSheet.create({
     Image: {margin:20},
     WelcomBar: {
-        // alignItems: 'center' ,
         flexDirection: 'row',
         backgroundColor:'#55A8D9' ,
         marginTop:20,

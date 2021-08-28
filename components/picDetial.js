@@ -14,7 +14,6 @@ function PicDetial (props){
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
     console.log("we are in picDetail")
     console.log(pictaken)
-    //<Animatable.View animation="fadeInRightBig" duration={2000}> </Animatable.View>
 
     const uploadImages = (pictaken) => {
         dispatch(photoUpload(pictaken));

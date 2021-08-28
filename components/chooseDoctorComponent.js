@@ -130,7 +130,6 @@ function ChooseDoctor (props){
 const styles = StyleSheet.create({
     Image: {margin:20},
     WelcomBar: {
-        // alignItems: 'center' ,
         flexDirection: 'row',
         backgroundColor:'#55A8D9' ,
         marginTop:20,
@@ -181,7 +180,6 @@ const styles = StyleSheet.create({
         },
     capture: {
         flex: 0,
-        // backgroundColor: '#fff',
         borderRadius: 5,
         padding: 10,
         paddingHorizontal: 10,

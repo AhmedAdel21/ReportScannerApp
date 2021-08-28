@@ -2,7 +2,6 @@
 import React from 'react';
 import { Text, View, FlatList, ScrollView } from 'react-native';
 import { Card } from 'react-native-elements';
-import { useSelector} from 'react-redux';
 import * as Animatable from 'react-native-animatable';
 import Bar from './BarComponent';
 

@@ -60,7 +60,6 @@ export default function Signup (props){
           }
           console.log(newUser)
         dispatch(singup(newUser))
-        /*inputRef.current.clear();*/
     }
     const ShowAlert = () =>{
         return(

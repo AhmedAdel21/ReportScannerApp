@@ -72,7 +72,6 @@ function PatientHome ({navigation}){
     const user = useSelector(state => state.user);
     const userReports = user.reports;
     const dispatch = useDispatch();
-    //console.log("userReports",userReports);
     const deleteReport = (id) => {dispatch(deletReports(id))} ;
     
     const renderReportItem = ({item,index}) => {
@@ -115,7 +114,6 @@ function PatientHome ({navigation}){
 const styles = StyleSheet.create({
     Image: {margin:20},
     WelcomBar: {
-        // alignItems: 'center' ,
         flexDirection: 'row',
         backgroundColor:'#55A8D9' ,
         marginTop:20,
